@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <header>
+        <nav class="navbar">
+            <a href="{% static 'home.html' %}" class="logo">Profile</a>
+                <a class="profile-icon-link-container" href="{% static 'login.html' %}">
+                    <div class="header-logout">Logout</div>
+                </a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+            <form class = 'container' action="" method="POST" enctype="multipart/form-data">
+                <div class="profile-photo-container profile-photo-form-container">
+                    <p class="profile-page-heading">Edit your profile</p>
+                    <img src="{% static 'images/logo.jpg' %}" alt="user-image" width="" srcset="">
+
+                </div>
+            
+
+                <div class="user-content-container user-profile-form-container">
+                    <ul>
+                        <li class="name">
+                            <label for="user-name">Your Name</label>
+                            <input type="text" name="" id="user-name" class="user-name-input" placeholder="Your Name">
+                        </li>
+                        <li class="title">
+                            <label for="user-title">Your title</label>
+                            <input type="text" name="" id="user-title" class="user-title-input" placeholder="Your Title">
+                        </li>
+                        <li class="desc">
+                            <label for="user-desc">Description</label>
+                            <input type="text" name="" id="user-desc" class="user-desc-input" placeholder="Description">
+                        </li>
+                    </ul>
+                    <button class="profile-save-button"> Save </button>
+                </div>
+            </form>
+    </main>
+
+    <script>
+
+    var id_name = document.getElementById('id_name')
+    var id_title = document.getElementById('id_title')
+    var id_desc = document.getElementById('id_desc')
+    id_name.placeholder = 'Your Name'
+    id_title.placeholder = 'Your Title'
+    id_desc.placeholder = 'Description'
+
+    </script>
+{% endblock content %}
