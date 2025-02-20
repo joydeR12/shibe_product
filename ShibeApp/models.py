@@ -28,7 +28,7 @@ def __str__(self):
 
 
 class Category(models.Model):
-   cid = ShortUUIDField(unique=True,length=30,max_length=30,prefix='cat',alphabet='abcdefgh12345')
+   cid = ShortUUIDField(unique=True,length=33,max_length=33,prefix='cat',alphabet='abcdefgh12345')
    title = models.CharField(max_length=200, default='category')
    image = models.ImageField(upload_to='category',default='category.jpg')
 
@@ -42,7 +42,7 @@ class Category(models.Model):
       return self.title
    
 class seller(models.Model):
-   sid = ShortUUIDField(unique=True,length=30,max_length=30,prefix='cat',alphabet='abcdefgh12345')
+   sid = ShortUUIDField(unique=True,length=33,max_length=33,prefix='cat',alphabet='abcdefgh12345')
 
    title = models.CharField(max_length=200, default='shibesellers')
    image = models.ImageField( upload_to='user_directory_path',default='seller.jpg')
@@ -75,13 +75,6 @@ class Product(models.Model):
 
       price = models.DecimalField(max_digits=999999999,decimal_places=2, default='1.99')
       old_price = models.DecimalField(max_digits=999999999,decimal_places=2, default='2.99')
-
-      specification = models.TextField(null=True, blank=True)
-      
-      product_status = models.CharField(choices=STATUS_CHOICE,max_length=10, default='Added')
-
-      status =  models.BooleanField(default=True)
-      in_stock = models.BooleanField(default=True)
 
       sku = ShortUUIDField(unique=True,length=4,max_length=30,prefix='sku',alphabet='1234567890')
 
