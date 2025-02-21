@@ -69,7 +69,7 @@ class Product(models.Model):
       user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
       category = models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
 
-      title = models.CharField(max_length=200, default='shibeunga')
+      title = models.CharField(max_length=200)
       image = models.ImageField(upload_to='user_directory_path',default='product.jpg')
       description = models.TextField(null=True, blank=True, default='this is the product')
 

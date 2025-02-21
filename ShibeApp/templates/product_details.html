@@ -1,0 +1,18 @@
+{% block content %}
+<head>
+  <title>Product Details</title>
+</head>
+<body>
+  <h1>{{ object.title }}</h1>
+  <p>Price: {{ object.price }}</p>
+  <p>Description: {{ object.description }}</p>
+  <p>User: {{ object.user }}</p>
+  <p>Image: {{ object.image }}</p>
+  <p>Date: {{ object.update }}</p>
+  <p>updated: {{ object.update }}</p>
+
+  <a href="{% url 'ShibeApp:product_list' %}"
+    ><button>back to Product list</button></a
+  >
+</body>
+{% endblock content %}

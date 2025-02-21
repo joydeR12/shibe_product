@@ -1,26 +1,55 @@
-{% extends 'base.html' %} {%block content%}
+
+{% load static %}
+
+ {% block content %}
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product List</title>
 </head>
 <style>
+
+
+
   body {
     font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
     margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-  }
-
-  .container {
-    width: 80%;
-    margin: 0 auto;
     padding: 20px;
   }
 
+
+
   h1 {
-    text-align: center;
     color: #333;
+  }
+
+  form {
+    margin-bottom: 20px;
+  }
+
+  button {
+    background: rgba(192, 197, 192, 0.719);
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    width:130px;
+    height: 40px;
+    font-weight: 500;
+
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transform: .3s ease;
+    font-size: 15px;
+    margin-left: 2px;
+  }
+
+  button:hover {
+    background: rgba(216, 221, 221, 0.719);
   }
 
   .product-list {
@@ -28,76 +57,156 @@
     padding: 0;
   }
 
-  .product-item {
-    background-color: #fff;
-    margin: 10px 0;
-    padding: 15px;
+  .product-list li {
+    background: #f8f9fa;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  tr:hover {
+    background-color: #f5f5f5;
+  }
+
+  .product-name {
+    font-weight: bold;
+  }
+
+  .product-price {
+    color: #ecb607;
+  }
+
+  .product-description {
+    font-style: italic;
+  }
+
+  .product-user {
+    color: #28a745;
+  }
+
+  .icon {
+    cursor: pointer;
+  }
+
+  .icon {
+    cursor: pointer;
+    margin-right: 5px; /* Add some space between icons */
+  }
+
+  .icon-container {
     display: flex;
     align-items: center;
   }
 
-  .product-item img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-right: 20px;
+  .icon-container img {
+    width: 20px;
+    height: 20px;
   }
 
-  .product-details {
-    flex: 1;
-  }
+.bt{
+width:130px;
+height: 40px;
+font-weight: 500;
 
-  .product-title {
-    font-size: 1.5em;
-    color: #333;
-    margin: 0;
-  }
+border: none;
+border-radius: 30px;
+cursor: pointer;
+transform: .3s ease;
+font-size: 15px;
+margin-left: 1200px;
+margin-bottom: 50px;
 
-  .product-description {
-    color: #777;
-    margin: 10px 0;
-  }
 
-  .product-price {
-    font-size: 1.2em;
-    color: #d9534f;
-  }
 
-  .product-old-price {
-    font-size: 1.2em;
-    color: #777;
-    text-decoration: line-through;
-    margin-left: 10px;
-  }
+}
 
-  .product-discount {
-    font-size: 1em;
-    color: #5cb85c;
-  }
+.ttle{
+  margin-top: 0%;
+}
 </style>
-<body>
-  <div class="container">
-    <h1>Products</h1>
-    <a href="{% url 'ShibeApp:add_product' %}"><button>Add Product</button></a>
-    <ul class="product-list">
-      {% for product in products %}
-      <li class="product-item">
-        <img src="{{ product.image.url }}" alt="{{ product.title }}" />
-        <div class="product-details">
-          <h2 class="product-title">{{ product.title }}</h2>
-          <p class="product-description">{{ product.description }}</p>
-          <p class="product-price">${{ product.price }}</p>
-          <p class="product-old-price">${{ product.old_price }}</p>
-          <p class="product-discount">
-            {{ product.get_percentage|floatformat:2 }}% off
-          </p>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
+<bod>
+  <div class="ttle">
+     <h1>Product list</h1>
   </div>
+
+  
+    <div class="bt ">
+          <a href="{% url 'ShibeApp:add_product' %}"><button>Add Product</button></a>
+    </div>
+
+
+  <table>
+    <tr>
+      <th>Product Name</th>
+      <th>Price</th>
+      <th>Description</th>
+      <th>User</th>
+      <th>Actions</th>
+    </tr>
+    {% for product in products %}
+    <tr>
+      <td class="product-name">{{ product.title }}</td>
+      <td class="product-price">{{ product.price }}</td>
+      <td class="product-description">{{ product.description }}</td>
+      <td class="product-user">{{ product.user }}</td>
+      <td>
+        <div class="icon-container">
+          <a href="{% url 'ShibeApp:product_details' product.pk %}"
+            ><img
+              src="{% static 'images/view_icon.png' %}"
+              alt="View"
+              class="icon"
+          /></a>
+          <a href="#" class="delete-link" data-id="{{ product.pk }}">
+            <img src="{% static 'images/delete_icon.png' %}" alt="Delete" class="icon" />
+          </a>
+          <a href="{% url 'ShibeApp:add_product' %}"
+            ><img
+              src="{% static 'images/add_icon.png' %}"
+              alt="Add"
+              class="icon"
+          /></a>
+        </div>
+      </td>
+      {% endfor %}
+    </tr>
+  </table>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const deleteLinks = document.querySelectorAll('.delete-link');
+
+  deleteLinks.forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      const userConfirmed = confirm('Are you sure you want to delete the product?');
+      if (userConfirmed) {
+        // Get the product row
+        const productRow = this.closest('tr');
+        // Remove the product row from the table
+        productRow.remove();
+        alert('Product deleted!');
+      } else {
+        alert('Deletion canceled.');
+      }
+    });
+  });
+});
+</script>
 </body>
 {%endblock content%}

@@ -1,16 +1,206 @@
-{% extends 'base.html' %} {%block content%}
+{% extends 'base.html' %} 
+{% block content %}
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add Product</title>
 </head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  h1 {
+    color: #333;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .form-field {
+    width: 48%;
+    margin-right: 2%;
+    margin-bottom: 20px;
+  }
+
+  .form-field:nth-child(2n) {
+    margin-right: 0;
+  }
+
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .product-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .product-list li {
+    background: #f8f9fa;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  button {
+    background: rgba(192, 197, 192, 0.719);
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 130px;
+    height: 50px;
+    font-weight: 500;
+
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transform: 0.3s ease;
+    font-size: 15px;
+    margin-left: -240px;
+    margin-top: -300px;
+  }
+
+  .plist {
+    margin-left: 2px;
+    margin-right: 3px;
+    margin-top: 100px;
+
+    color: black;
+    border: none;
+    padding: 7px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 130px;
+    height: 50px;
+    font-weight: 500;
+
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transform: 0.3s ease;
+    font-size: 15px;
+  }
+  .bt{
+    margin-top: -230px;
+  }
+
+  button:hover {
+    background: rgba(216, 221, 221, 0.719);
+  }
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  width: 48%;
+  margin-right: 2%;
+  margin-bottom: 20px;
+  /* margin-left: 5px; */
+}
+
+.form-field:nth-child(2n) {
+  margin-right: 0;
+}
+
+input[type="text"],
+input[type="file"],
+textarea {
+ 
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  font-size: 16px;
+  background: rgba(192, 197, 192, 0.719);
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  cursor:cursor;
+  width: 130px;
+  height: 50px;
+  font-weight: 500;
+  border-radius: 30px;
+  font-size: 15px;
+   
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+  color: black;
+  
+}
+</style>
 <body>
-  <div class="container">
-    <h1>Add Product</h1>
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit">Add Product</button>
-    </form>
+
+  <form method="post" enctype="multipart/form-data" id="add-product-form">
+    {% csrf_token %}
+    <div class="form-field"><input type="text" name="title" placeholder="Title" /></div>
+    <div class="form-field"><input type="file" name="image" /></div>
+    <div class="form-field"><input type="text" name="description" placeholder="Description" /></div>
+    <div class="form-field"><input type="text" name="price" placeholder="Price" /></div>
+    <div class="form-field"><input type="text" name="old_price" placeholder="Old Price" /></div>
+    <div class="form-field"><input type="text" name="user" placeholder="User" /></div>
+    <button type="submit" class="bt">save</button>
+  
+  <div class="plist">
+    <a href="{% url 'ShibeApp:product_list' %}"><button>List</button></a>
   </div>
+
+  <script>
+    document
+      .getElementById("add-product-form")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
+          },
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.href = '{% url "ShibeApp:product_list" %}';
+            } else {
+              alert("Error adding product");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      });
+  </script>
 </body>
-{%endblock content%}
+{% endblock content %}

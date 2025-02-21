@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from . models import Product
 from .forms import ProductForm
+from django.views.generic.detail import DetailView
 
 @login_required
 def home(request):
@@ -37,4 +38,9 @@ def add_product(request):
   else:
     form = ProductForm()
   return render(request, 'add_product.html', {'form':form})
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'product_details.html'
 
