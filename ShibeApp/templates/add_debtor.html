@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+<head>
+  <title>Add Debtor</title>
+</head>
+<body>
+  <h1>Add Debtor</h1>
+  <form method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <a href="{%url 'ShibeApp:list_debtors'%}"
+      ><button type="submit">Submit</button></a
+    >
+  </form>
+</body>
+{%endblock content%}

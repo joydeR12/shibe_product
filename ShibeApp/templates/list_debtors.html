@@ -1,0 +1,69 @@
+{% extends 'base.html' %} {% block content %}
+<head>
+  <title>List of Debtors</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #4caf50;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>List of Debtors</h1>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Product Price</th>
+          <th>Sum of Debts</th>
+          <th>Debt Paid</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for debtor in debtors %}
+        <tr>
+          <td>{{ debtor.name }}</td>
+          <td>{{ debtor.phone }}</td>
+          <td>{{ debtor.product_price }}</td>
+          <td>{{ debtor.sum_of_debts }}</td>
+          <td>{{ debtor.debt_paid }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'ShibeApp:add_debtor'%}"><button>add debtor</button></a>
+  </div>
+</body>
+{%endblock content%}

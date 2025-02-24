@@ -1,10 +1,9 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from . models import Product
-from .forms import ProductForm
+from .models import Debtor, Product
+from .forms import ProductForm,DebtorForm
 from django.views.generic.detail import DetailView
-
 @login_required
 def home(request):
     return render(request,'home.html', {}) 
@@ -44,3 +43,18 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'product_details.html'
 
+
+def add_debtor(request):
+  if request.method == 'POST':
+    form = DebtorForm(request.POST)
+    if form.is_valid():
+      form.save()
+      return redirect('add_debtor')
+    
+  else:
+    form = DebtorForm()
+  return render(request,'add_debtor.html',{'form':form})
+
+def list_debtors(request):
+    debtors = Debtor.objects.all()
+    return render(request, 'list_debtors.html', {'debtors': debtors})

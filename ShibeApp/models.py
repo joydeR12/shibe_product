@@ -108,6 +108,21 @@ class ProductImage(models.Model):
    class Meta:
     verbose_name_plural = 'Product_images'
 
+class Debtor(models.Model):
+    debtor_name = models.CharField(max_length=255)
+    debtor_phone = models.CharField(max_length=20)
+    product_price = models.DecimalField(max_digits=10, decimal_places=2)
+    name_of_products = models.CharField(max_length=255)
+    sum_of_debts = models.DecimalField(max_digits=10, decimal_places=2)
+    products_in_debt = models.TextField()
+    debt_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    debt_reduced = models.DecimalField(max_digits=10, decimal_places=2)
+    debt_overdue = models.DecimalField(max_digits=10, decimal_places=2)
+    debt_pending = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.debtor_name
+
    
 
 
