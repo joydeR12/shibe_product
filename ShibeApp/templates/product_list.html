@@ -1,155 +1,200 @@
-
-{% load static %}
-
- {% block content %}
+{% load static %} {% block content %}
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product List</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+  <style>
+    :root {
+      --background-color: #f8f9fa;
+      --text-color: #333;
+      --card-background-color: #fff;
+      --header-background-color: #fff;
+      --sidebar-background-color: #fff;
+      --button-background-color: rgba(192, 197, 192, 0.719);
+    }
+
+    body.dark-mode {
+      --background-color: black;
+      --text-color: rgb(139, 122, 122);
+      --card-background-color: black;
+      --header-background-color: black;
+      --sidebar-background-color: black;
+      --button-background-color: rgb(241, 237, 228);
+    }
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+
+    .header,
+    .sidebar,
+    .main-container,
+    .card,
+    .charts-card {
+      background-color: var(--card-background-color);
+    }
+    h1 {
+      color: #333;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-family: "Montserrat", Arial, sans-serif; /* Apply Montserrat font to the button */
+      background: rgba(192, 197, 192, 0.719);
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 130px;
+      height: 40px;
+      font-weight: 500;
+      transform: 0.3s ease;
+      font-size: 15px;
+      margin: 5px;
+      box-sizing: border-box; /* Ensure padding and border are included in width */
+    }
+
+    button:hover {
+      background: rgba(216, 221, 221, 0.719);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      word-wrap: break-word; /* Handle long text */
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .icon {
+      cursor: pointer;
+      margin-right: 5px; /* Add some space between icons */
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-container img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .bt {
+      width: 100%;
+      max-width: 130px;
+      font-weight: 500;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transform: 0.3s ease;
+      font-size: 15px;
+      margin: 0 auto 50px; /* Center button */
+      display: block;
+    }
+
+    .ttle {
+      text-align: center;
+      margin-top: 0%;
+    }
+    .product-price {
+      color: #ecb607;
+      font-weight: 500;
+    }
+
+    .product-user {
+      color: #28a745;
+      font-weight: 500;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .bt {
+        width: 100%;
+        max-width: none;
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+
+      .icon-container {
+        justify-content: space-between;
+      }
+
+      table,
+      th,
+      td {
+        font-size: 14px;
+        padding: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .bt {
+        font-size: 12px;
+      }
+
+      button {
+        font-size: 12px;
+      }
+
+      th,
+      td {
+        font-size: 12px;
+        padding: 4px;
+      }
+    }
+  </style>
 </head>
-<style>
-
-
-
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 20px;
-  }
-
-
-
-  h1 {
-    color: #333;
-  }
-
-  form {
-    margin-bottom: 20px;
-  }
-
-  button {
-    background: rgba(192, 197, 192, 0.719);
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    width:130px;
-    height: 40px;
-    font-weight: 500;
-
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    transform: .3s ease;
-    font-size: 15px;
-    margin-left: 2px;
-  }
-
-  button:hover {
-    background: rgba(216, 221, 221, 0.719);
-  }
-
-  .product-list {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  .product-list li {
-    background: #f8f9fa;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  th,
-  td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f2f2f2;
-  }
-
-  tr:hover {
-    background-color: #f5f5f5;
-  }
-
-  .product-name {
-    font-weight: bold;
-  }
-
-  .product-price {
-    color: #ecb607;
-  }
-
-  .product-description {
-    font-style: italic;
-  }
-
-  .product-user {
-    color: #28a745;
-  }
-
-  .icon {
-    cursor: pointer;
-  }
-
-  .icon {
-    cursor: pointer;
-    margin-right: 5px; /* Add some space between icons */
-  }
-
-  .icon-container {
-    display: flex;
-    align-items: center;
-  }
-
-  .icon-container img {
-    width: 20px;
-    height: 20px;
-  }
-
-.bt{
-width:130px;
-height: 40px;
-font-weight: 500;
-
-border: none;
-border-radius: 30px;
-cursor: pointer;
-transform: .3s ease;
-font-size: 15px;
-margin-left: 1200px;
-margin-bottom: 50px;
-
-
-
-}
-
-.ttle{
-  margin-top: 0%;
-}
-</style>
-<bod>
+<body>
+  <p>
+    <span style="color: green"> <span style="color: orange">Shibe</span></span>
+    Products
+  </p>
+  <button id="theme-toggle" style="position: fixed; top: 24px; right: 10px">
+    <i class="fas fa-toggle-on"></i>
+    <!-- This is the toggle icon -->
+  </button>
   <div class="ttle">
-     <h1>Product list</h1>
+    <h1>Product <span>list</span></h1>
   </div>
 
-  
-    <div class="bt ">
-          <a href="{% url 'ShibeApp:add_product' %}"><button>Add Product</button></a>
-    </div>
-
+  <div class="bt">
+    <a href="{% url 'ShibeApp:add_product' %}"><button>Add</button></a>
+  </div>
 
   <table>
     <tr>
@@ -167,46 +212,61 @@ margin-bottom: 50px;
       <td class="product-user">{{ product.user }}</td>
       <td>
         <div class="icon-container">
-          <a href="{% url 'ShibeApp:product_details' product.pk %}"
-            ><img
+          <a href="{% url 'ShibeApp:product_details' product.pk %}">
+            <img
               src="{% static 'images/view_icon.png' %}"
               alt="View"
               class="icon"
-          /></a>
-          <a href="#" class="delete-link" data-id="{{ product.pk }}">
-            <img src="{% static 'images/delete_icon.png' %}" alt="Delete" class="icon" />
+            />
           </a>
-          <a href="{% url 'ShibeApp:add_product' %}"
-            ><img
+          <a href="#" class="delete-link" data-id="{{ product.pk }}">
+            <img
+              src="{% static 'images/delete_icon.png' %}"
+              alt="Delete"
+              class="icon"
+            />
+          </a>
+          <a href="{% url 'ShibeApp:add_product' %}">
+            <img
               src="{% static 'images/add_icon.png' %}"
               alt="Add"
               class="icon"
-          /></a>
+            />
+          </a>
         </div>
       </td>
       {% endfor %}
     </tr>
   </table>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-  const deleteLinks = document.querySelectorAll('.delete-link');
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const deleteLinks = document.querySelectorAll(".delete-link");
 
-  deleteLinks.forEach(function (link) {
-    link.addEventListener('click', function (event) {
-      event.preventDefault();
-      const userConfirmed = confirm('Are you sure you want to delete the product?');
-      if (userConfirmed) {
-        // Get the product row
-        const productRow = this.closest('tr');
-        // Remove the product row from the table
-        productRow.remove();
-        alert('Product deleted!');
-      } else {
-        alert('Deletion canceled.');
-      }
+      deleteLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          const userConfirmed = confirm(
+            "Are you sure you want to delete the product?"
+          );
+          if (userConfirmed) {
+            // Get the product row
+            const productRow = this.closest("tr");
+            // Remove the product row from the table
+            productRow.remove();
+            alert("Product deleted!");
+          } else {
+            alert("Deletion canceled.");
+          }
+        });
+      });
     });
-  });
-});
-</script>
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const body = document.body;
+
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+    });
+  </script>
 </body>
-{%endblock content%}
+{% endblock content %}

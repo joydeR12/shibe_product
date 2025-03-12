@@ -2,7 +2,7 @@ from django.urls import include, path
 from .views import authView, home
 from django.contrib.auth import views as auth_views
 from ShibeApp import views
-
+from .views import DebtorDetailView ,DebtorDeleteView
 
 app_name = 'ShibeApp'
 
@@ -17,4 +17,11 @@ urlpatterns = [
     path('product/<int:pk>/', views.ProductDetailView.as_view(), name='product_details'),
     path('add_debtor/', views.add_debtor, name='add_debtor'),
     path('list_debtors/', views.list_debtors, name='list_debtors'),
+    path('debtor/<int:pk>/', DebtorDetailView.as_view(), name='debtor_detail'),
+    path('manage-roles/', views.manage_roles, name='manage_roles'),
+    path('delete-debtor/<int:debtor_id>/', views.delete_debtor, name='delete_debtor'),
+  
+    path('', views.calculate_totals, name='home'),
+
+
  ] 

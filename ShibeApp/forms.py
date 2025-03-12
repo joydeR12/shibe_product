@@ -9,4 +9,13 @@ class ProductForm(forms.ModelForm):
 class DebtorForm(forms.ModelForm):
     class Meta:
         model = Debtor
-        fields = '__all__'
+        fields = [
+            'debtor_name',
+            'debtor_phone',
+            'product_price',
+            'name_of_products',
+            'products_in_debt',
+            'debt_paid',
+            'debt_pending',
+
+        ]

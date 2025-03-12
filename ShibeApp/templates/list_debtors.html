@@ -1,45 +1,178 @@
-{% extends 'base.html' %} {% block content %}
+{% load static %} {% block content %}
 <head>
   <title>List of Debtors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+
+  <!-- Updated Button -->
   <style>
+    :root {
+      --background-color: #f8f9fa;
+      --text-color: #333;
+      --card-background-color: #fff;
+      --header-background-color: #fff;
+      --sidebar-background-color: #fff;
+      --button-background-color: rgba(192, 197, 192, 0.719);
+    }
+
+    body.dark-mode {
+      --background-color: black;
+      --text-color: rgb(139, 122, 122);
+      --card-background-color: black;
+      --header-background-color: black;
+      --sidebar-background-color: black;
+      --button-background-color: rgb(241, 237, 228);
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
+      background-color: var(--background-color);
+      color: var(--text-color);
       margin: 0;
       padding: 0;
+      font-family: "Montserrat", Arial, sans-serif;
     }
+
+    .header,
+    .sidebar,
+    .main-container,
+    .card,
+    .charts-card {
+      background-color: var(--card-background-color);
+    }
+
+    button {
+      background: var(--button-background-color);
+      color: var(--text-color);
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 130px;
+      height: 40px;
+      font-weight: 500;
+      transition: 0.3s ease;
+      font-size: 15px;
+      margin: 5px;
+      box-sizing: border-box; /* Ensure padding and border are included in width */
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+
     h1 {
       text-align: center;
-      color: #333;
+      color: var(--text-color);
+      margin-top: 20px;
     }
+
+    .table-container {
+      width: 90%;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+
     table {
-      width: 80%;
-      margin: 20px auto;
+      width: 100%;
       border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
     th,
     td {
-      padding: 12px;
+      border: 1px solid #ddd;
+      padding: 8px;
       text-align: left;
-      border-bottom: 1px solid #ddd;
+      word-wrap: break-word; /* Handle long text */
     }
+
     th {
-      background-color: #4caf50;
-      color: white;
+      background-color: #f2f2f2;
     }
+
     tr:hover {
       background-color: #f5f5f5;
     }
-    .table-container {
+
+    .icon {
+      cursor: pointer;
+      margin-right: 5px; /* Add some space between icons */
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-container img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .bt {
       width: 100%;
-      overflow-x: auto;
+      max-width: 130px;
+      font-weight: 500;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      font-size: 15px;
+      margin: 0 auto 50px; /* Center button */
+      display: block;
+    }
+
+    .debtor-name {
+      color: orange;
+      font-weight: 50px;
+    }
+
+    .sum {
+      color: green;
+      font-weight: 50px;
+    }
+
+    .paid {
+      color: red;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      th,
+      td {
+        font-size: 14px;
+        padding: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      th,
+      td {
+        font-size: 12px;
+        padding: 4px;
+      }
     }
   </style>
 </head>
+
 <body>
+  <p>
+    <span style="color: green"> <span style="color: orange">Shibe</span></span>
+    Products
+  </p>
+  <button id="theme-toggle" style="position: fixed; top: 24px; right: 10px">
+    <i class="fas fa-toggle-on"></i>
+    <!-- This is the toggle icon -->
+  </button>
+
   <h1>List of Debtors</h1>
+  <div class="bt">
+    <a href="{% url 'ShibeApp:add_debtor' %}"><button>Add</button></a>
+  </div>
   <div class="table-container">
     <table>
       <thead>
@@ -47,23 +180,80 @@
           <th>Name</th>
           <th>Phone</th>
           <th>Product Price</th>
-          <th>Sum of Debts</th>
           <th>Debt Paid</th>
+          <th>Debt pending</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for debtor in debtors %}
-        <tr>
-          <td>{{ debtor.name }}</td>
-          <td>{{ debtor.phone }}</td>
+        <tr id="debtor-{{ debtor.pk }}">
+          <td class="debtor-name">{{ debtor.debtor_name }}</td>
+          <td>{{ debtor.debtor_phone }}</td>
           <td>{{ debtor.product_price }}</td>
-          <td>{{ debtor.sum_of_debts }}</td>
           <td>{{ debtor.debt_paid }}</td>
+          <td class="pending">{{ debtor.debt_pending }}</td>
+
+          <td>
+            <div class="icon-container">
+              <a href="{% url 'ShibeApp:debtor_detail' debtor.pk %}">
+                <img
+                  src="{% static 'images/view_icon.png' %}"
+                  alt="View"
+                  class="icon"
+                />
+              </a>
+              <a href="#" class="delete-link" data-id="{{ product.pk }}">
+                <img
+                  src="{% static 'images/delete_icon.png' %}"
+                  alt="Delete"
+                  class="icon"
+                />
+              </a>
+
+              <a href="{% url 'ShibeApp:add_debtor' %}">
+                <img
+                  src="{% static 'images/add_icon.png' %}"
+                  alt="Add"
+                  class="icon"
+                />
+              </a>
+            </div>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    <a href="{% url 'ShibeApp:add_debtor'%}"><button>add debtor</button></a>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const deleteLinks = document.querySelectorAll(".delete-link");
+
+      deleteLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          const userConfirmed = confirm(
+            "Are you sure you want to delete the debtor?"
+          );
+          if (userConfirmed) {
+            // Get the product row
+            const productRow = this.closest("tr");
+            // Remove the product row from the table
+            productRow.remove();
+            alert("Debtor deleted!");
+          } else {
+            alert("Deletion canceled.");
+          }
+        });
+      });
+    });
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const body = document.body;
+
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+    });
+  </script>
 </body>
-{%endblock content%}
+{% endblock content %}

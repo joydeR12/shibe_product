@@ -1,247 +1,277 @@
 {% extends 'base.html' %} {% block content %}
-<!-- <div class="logout" style="margin-top:-500px; margin-left: 900px;" >
- <form method="POST" action="{% url 'ShibeApp:logout' %}" >
-{% csrf_token %} 
-<a href=""></a><button type="submit">Logout</button> 
-</form>
-</div> -->
-
-<div class="grid-container">
-  <!-- Header -->
-  <header class="header">
-    <div class="menu-icon" onclick="openSidebar()">
-      <span class="material-icons-outlined">menu</span>
-    </div>
-    <div class="header-left">
-      <span class="material-icons-outlined">search</span>
-    </div>
-    <div class="header-right">
-      <span class="material-icons-outlined">notifications</span>
-      <span class="material-icons-outlined">email</span>
-      <span class="material-icons-outlined">account_circle</span>
-    </div>
-  </header>
-  <!-- End Header -->
-
-  <!-- Sidebar -->
-  <aside id="sidebar">
-    <div class="sidebar-title">
-      <div class="nav-logo">
-        <p>
-          <span style="color: green">
-            <span style="color: orange">Shibe</span></span
-          >
-          Products
-        </p>
-      </div>
-      <span class="material-icons-outlined" onclick="closeSidebar()"
-        >close</span
-      >
-    </div>
-
-    <ul class="sidebar-list">
-      <li class="sidebar-list-item">
-        <a href="#" target="_blank">
-          <span class="material-icons-outlined">dashboard</span> Dashboard
-        </a>
-      </li>
-      <li class="sidebar-list-item">
-        <a href="{% url 'ShibeApp:product_list' %}" target="_blank">
-          <span class="material-icons-outlined">inventory_2</span> Products
-        </a>
-      </li>
-      <li class="sidebar-list-item">
-        <a href="{% url 'ShibeApp:list_debtors' %}" target="_blank">
-          <span class="material-icons-outlined">fact_check</span> Debts
-        </a>
-      </li>
-      <li class="sidebar-list-item">
-        <a href="#" target="_blank">
-          <span class="material-icons-outlined">settings</span> Settings
-        </a>
-      </li>
-    </ul>
-  </aside>
-  <!-- End Sidebar -->
-
-  <!-- Main -->
-  <main class="main-container">
-    <div class="main-title">
-      <p class="font-weight-bold">DASHBOARD</p>
-    </div>
-
-    <div class="main-cards">
-      <div class="card">
-        <div class="card-inner">
-          <p class="text-primary">paid debts</p>
-          <span class="material-icons-outlined text-blue">paid</span>
-        </div>
-        <span class="text-primary font-weight-bold">249</span>
-      </div>
-
-      <div class="card">
-        <div class="card-inner">
-          <p class="text-primary">pending debts</p>
-          <span class="material-icons-outlined text-orange">pending</span>
-        </div>
-        <span class="text-primary font-weight-bold">83</span>
-      </div>
-
-      <div class="card">
-        <div class="card-inner">
-          <p class="text-primary">reduced debts</p>
-          <span class="material-icons-outlined text-green"
-            >incomplete_circle</span
-          >
-        </div>
-        <span class="text-primary font-weight-bold">79</span>
-      </div>
-
-      <div class="card">
-        <div class="card-inner">
-          <p class="text-primary">overdue debts</p>
-          <span class="material-icons-outlined text-red"
-            >running_with_errors</span
-          >
-        </div>
-        <span class="text-primary font-weight-bold">56</span>
-      </div>
-    </div>
-
-    <div class="charts">
-      <div class="charts-card">
-        <p class="chart-title">Top Borrowed Products</p>
-        <div id="bar-chart"></div>
-      </div>
-
-      <div class="charts-card">
-        <p class="chart-title">Debtors and Payments</p>
-        <div id="area-chart"></div>
-      </div>
-    </div>
-  </main>
-  <!-- End Main -->
-</div>
-
-<script>
-  // SIDEBAR TOGGLE
-  let sidebarOpen = false;
-  const sidebar = document.getElementById("sidebar");
-
-  function openSidebar() {
-    if (!sidebarOpen) {
-      sidebar.classList.add("sidebar-responsive");
-      sidebarOpen = true;
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --background-color: #f8f9fa;
+      --text-color: #333;
+      --card-background-color: #fff;
+      --header-background-color: #fff;
+      --sidebar-background-color: #0c0c0c;
+      --button-background-color: rgba(192, 197, 192, 0.719);
     }
-  }
 
-  function closeSidebar() {
-    if (sidebarOpen) {
-      sidebar.classList.remove("sidebar-responsive");
-      sidebarOpen = false;
+    body.dark-mode {
+      --background-color: black;
+      --text-color: rgb(139, 122, 122);
+      --card-background-color: black;
+      --header-background-color: black;
+      --sidebar-background-color: black;
+      --button-background-color: rgb(241, 237, 228);
     }
-  }
 
-  // ---------- CHARTS ----------
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      font-family: "Montserrat", Arial, sans-serif;
+    }
 
-  // BAR CHART
-  const barChartOptions = {
-    series: [
-      {
-        data: [10, 8, 6, 4, 2],
-      },
-    ],
-    chart: {
-      type: "bar",
-      height: 350,
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: ["#246dec", "#cc3c43", "#367952", "#f5b74f", "#4f35a1"],
-    plotOptions: {
-      bar: {
-        distributed: true,
-        borderRadius: 4,
-        horizontal: false,
-        columnWidth: "40%",
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    legend: {
-      show: false,
-    },
-    xaxis: {
-      categories: ["Laptop", "Phone", "Monitor", "Headphones", "Camera"],
-    },
-    yaxis: {
-      title: {
-        text: "Count",
-      },
-    },
-  };
+    .header,
+    .sidebar,
+    .main-container,
+    .card,
+    .charts-card {
+      background-color: var(--card-background-color);
+    }
+  </style>
+</head>
 
-  const barChart = new ApexCharts(
-    document.querySelector("#bar-chart"),
-    barChartOptions
-  );
-  barChart.render();
+<body>
+  {% if user.is_authenticated and user.is_staff %}
 
-  // AREA CHART
-  const areaChartOptions = {
-    series: [
-      {
-        name: "Purchase Orders",
-        data: [31, 40, 28, 51, 42, 109, 100],
-      },
-      {
-        name: "Sales Orders",
-        data: [11, 32, 45, 32, 34, 52, 41],
-      },
-    ],
-    chart: {
-      height: 350,
-      type: "area",
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: ["#4f35a1", "#246dec"],
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-    },
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-    markers: {
-      size: 0,
-    },
-    yaxis: [
-      {
-        title: {
-          text: "Purchase Orders",
+  <div class="grid-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="menu-icon" onclick="openSidebar()">
+        <span class="material-icons-outlined">menu</span>
+      </div>
+      <div class="header-left"></div>
+      <div class="header-right">
+        <span class="material-icons-outlined">notifications</span>
+        <span class="material-icons-outlined">account_circle</span>
+      </div>
+      <button id="theme-toggle" style="position: fixed; top: 24px; right: 10px">
+        <i class="fas fa-toggle-on"></i>
+        <!-- This is the toggle icon -->
+      </button>
+    </header>
+    <!-- End Header -->
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div class="sidebar-title">
+        <div class="nav-logo">
+          <p>
+            <span style="color: green">
+              <span style="color: orange">Shibe</span></span
+            >
+            Products
+          </p>
+        </div>
+        <span class="material-icons-outlined" onclick="closeSidebar()"
+          >close</span
+        >
+      </div>
+
+      <ul class="sidebar-list">
+        <li class="sidebar-list-item">
+          <a href="#" target="_blank">
+            <span class="material-icons-outlined">dashboard</span> Dashboard
+          </a>
+        </li>
+        <li class="sidebar-list-item">
+          <a href="{% url 'ShibeApp:product_list' %}" target="_blank">
+            <span class="material-icons-outlined">inventory_2</span> Products
+          </a>
+        </li>
+        <li class="sidebar-list-item">
+          <a href="{% url 'ShibeApp:list_debtors' %}" target="_blank">
+            <span class="material-icons-outlined">fact_check</span> Debts
+          </a>
+        </li>
+        <li class="sidebar-list-item">
+          <a href="{% url 'ShibeApp:manage_roles'%}" target="_blank">
+            <span class="material-icons-outlined">settings</span> Settings
+          </a>
+        </li>
+      </ul>
+    </aside>
+    <!-- End Sidebar -->
+
+    <!-- Main -->
+    <main class="main-container">
+      <div class="main-title">
+        <p class="font-weight-bold">DASHBOARD</p>
+      </div>
+
+      <div class="main-cards">
+        <div class="main-cards">
+          <div class="card">
+            <div class="card-inner">
+              <p class="text-primary">Paid Debts</p>
+              <span class="material-icons-outlined text-blue">paid</span>
+            </div>
+            <span class="text-primary font-weight-bold">
+              {{ total_paid_debts }}
+            </span>
+          </div>
+
+          <div class="card">
+            <div class="card-inner">
+              <p class="text-primary">Pending Debts</p>
+              <span class="material-icons-outlined text-orange">pending</span>
+            </div>
+            <span class="text-primary font-weight-bold">
+              {{ total_pending_debts }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts">
+        <div class="charts-card">
+          <p class="chart-title">Top Borrowed Products</p>
+          <div id="bar-chart"></div>
+        </div>
+
+        <div class="charts-card">
+          <p class="chart-title">Debtors and Payments</p>
+          <div id="area-chart"></div>
+        </div>
+      </div>
+    </main>
+    <!-- End Main -->
+  </div>
+
+  <script>
+    // SIDEBAR TOGGLE
+    let sidebarOpen = false;
+    const sidebar = document.getElementById("sidebar");
+
+    function openSidebar() {
+      if (!sidebarOpen) {
+        sidebar.classList.add("sidebar-responsive");
+        sidebarOpen = true;
+      }
+    }
+
+    function closeSidebar() {
+      if (sidebarOpen) {
+        sidebar.classList.remove("sidebar-responsive");
+        sidebarOpen = false;
+      }
+    }
+
+    // ---------- CHARTS ----------
+
+    // BAR CHART
+    const barChartOptions = {
+      series: [
+        {
+          data: [10, 8, 6, 4],
+        },
+      ],
+      chart: {
+        type: "bar",
+        height: 350,
+        toolbar: {
+          show: false,
         },
       },
-      {
-        opposite: true,
-        title: {
-          text: "Sales Orders",
+      colors: ["#246dec", "#cc3c43", "#367952", "#f5b74f"],
+      plotOptions: {
+        bar: {
+          distributed: true,
+          borderRadius: 4,
+          horizontal: false,
+          columnWidth: "40%",
         },
       },
-    ],
-    tooltip: {
-      shared: true,
-      intersect: false,
-    },
-  };
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
+      xaxis: {
+        categories: ["unga wa sembe", "dona", "kande", "unga wa lishe"],
+      },
+      yaxis: {
+        title: {
+          text: "Count",
+        },
+      },
+    };
 
-  const areaChart = new ApexCharts(
-    document.querySelector("#area-chart"),
-    areaChartOptions
-  );
-  areaChart.render();
-</script>
-{% endblock content %}
+    const barChart = new ApexCharts(
+      document.querySelector("#bar-chart"),
+      barChartOptions
+    );
+    barChart.render();
+
+    // AREA CHART
+    const areaChartOptions = {
+      series: [
+        {
+          name: "debtors",
+          data: [31, 40, 28, 51, 42, 109, 100],
+        },
+        {
+          name: "payments",
+          data: [11, 32, 45, 32, 34, 52, 41],
+        },
+      ],
+      chart: {
+        height: 350,
+        type: "area",
+        toolbar: {
+          show: false,
+        },
+      },
+      colors: ["#4f35a1", "#246dec"],
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+      },
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+      markers: {
+        size: 0,
+      },
+      yaxis: [
+        {
+          title: {
+            text: "debtors",
+          },
+        },
+        {
+          opposite: true,
+          title: {
+            text: "payments",
+          },
+        },
+      ],
+      tooltip: {
+        shared: true,
+        intersect: false,
+      },
+    };
+
+    const areaChart = new ApexCharts(
+      document.querySelector("#area-chart"),
+      areaChartOptions
+    );
+    areaChart.render();
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const body = document.body;
+
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+    });
+  </script>
+</body>
+{% endif %} {% endblock content %}
