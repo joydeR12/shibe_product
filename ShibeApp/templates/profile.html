@@ -1,52 +1,115 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
-    <header>
-        <nav class="navbar">
-            <a href="{% static 'home.html' %}" class="logo">Profile</a>
-                <a class="profile-icon-link-container" href="{% static 'login.html' %}">
-                    <div class="header-logout">Logout</div>
-                </a>
-        </nav>
-    </header>
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-    <main class="main-container">
-            <form class = 'container' action="" method="POST" enctype="multipart/form-data">
-                <div class="profile-photo-container profile-photo-form-container">
-                    <p class="profile-page-heading">Edit your profile</p>
-                    <img src="{% static 'images/logo.jpg' %}" alt="user-image" width="" srcset="">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
 
-                </div>
-            
+  h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-                <div class="user-content-container user-profile-form-container">
-                    <ul>
-                        <li class="name">
-                            <label for="user-name">Your Name</label>
-                            <input type="text" name="" id="user-name" class="user-name-input" placeholder="Your Name">
-                        </li>
-                        <li class="title">
-                            <label for="user-title">Your title</label>
-                            <input type="text" name="" id="user-title" class="user-title-input" placeholder="Your Title">
-                        </li>
-                        <li class="desc">
-                            <label for="user-desc">Description</label>
-                            <input type="text" name="" id="user-desc" class="user-desc-input" placeholder="Description">
-                        </li>
-                    </ul>
-                    <button class="profile-save-button"> Save </button>
-                </div>
-            </form>
-    </main>
+  .welcome-section {
+    text-align: center;
+    margin-bottom: 480px;
+    margin-left: -250px;
+  }
 
-    <script>
+  .welcome-section p {
+    font-size: 16px;
+    color: #555;
+  }
 
-    var id_name = document.getElementById('id_name')
-    var id_title = document.getElementById('id_title')
-    var id_desc = document.getElementById('id_desc')
-    id_name.placeholder = 'Your Name'
-    id_title.placeholder = 'Your Title'
-    id_desc.placeholder = 'Description'
+  form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    height: 60%;
+  }
 
-    </script>
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #555;
+  }
+
+  input[type="text"],
+  input[type="email"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  button {
+    background: green;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  button:hover {
+    background: rgba(216, 221, 221, 0.719);
+  }
+
+  .password-link {
+    text-align: center;
+    margin-top: 420px;
+    font-size: 16px;
+  }
+
+  .password-link a {
+    color: green;
+    text-decoration: none;
+  }
+
+  .password-link a:hover {
+    text-decoration: none;
+    color: orange;
+  }
+</style>
+
+<div class="welcome-section">
+  <h2 style="display: flex; align-items: center">
+    <span style="margin-right: 5px; color: green">Welcome,</span>
+    <span style="color: orange"
+      >{{ user.first_name|default:user.username }}</span
+    >
+  </h2>
+
+  <p>Manage your profile details below:</p>
+</div>
+
+<!-- Update Profile Form -->
+<form method="POST">
+  {% csrf_token %}
+  <label for="first_name">First Name:</label>
+  <input type="text" name="first_name" value="{{ user.first_name }}" required />
+  <label for="last_name">Last Name:</label>
+  <input type="text" name="last_name" value="{{ user.last_name }}" required />
+  <label for="email">Email:</label>
+  <input type="email" name="email" value="{{ user.email }}" required />
+  <button type="submit">Update Profile</button>
+</form>
+
+<!-- Password Change Link -->
+<div class="password-link">
+  <p>
+    <a href="{% url 'ShibeApp:password_change' %}">Change Password</a>
+  </p>
+</div>
+
 {% endblock content %}

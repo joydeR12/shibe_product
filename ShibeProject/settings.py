@@ -138,3 +138,8 @@ LOGOUT_REDIRECT_URL = "ShibeApp:login"
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # Enable default authentication backend
 )
+
+
+TWILIO_ACCOUNT_SID = 'AC60991aa1e5a30c10986cd12d78edc1fe'
+TWILIO_AUTH_TOKEN = '12a10eb494999acd685a5c9cab489d5b'
+TWILIO_NUMBER = +18566663241

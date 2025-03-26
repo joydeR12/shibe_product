@@ -1,0 +1,68 @@
+{% block content %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <title>Change Password</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      padding: 10px 20px;
+      background: green;
+      color: rgb(7, 7, 7);
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+    /* styles.css */
+    form p input {
+      width: calc(100% - 20px); /* Adjust width and account for padding */
+      padding: 10px; /* Add padding */
+      margin-bottom: 15px; /* Add margin at the bottom */
+      border: 1px solid #ddd; /* Add a light gray border */
+      border-radius: 4px; /* Add rounded corners */
+      font-size: 16px; /* Optional: Adjust font size */
+      box-sizing: border-box; /* Ensure padding is included in the width */
+    }
+
+    form p input:focus {
+      border-color: #007bff; /* Change border color on focus */
+      outline: none; /* Remove default outline */
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a subtle shadow on focus */
+    }
+    button:hover {
+      background: rgba(216, 221, 221, 0.719);
+    }
+    label {
+      font-weight: bold; /* Makes labels bold */
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center">
+    <span style="color: green">Change</span>
+    <span style="color: orange"> Password</span>
+  </h1>
+  <form method="post" action="{% url 'ShibeApp:password_change'%}">
+    {% csrf_token %} {{ form.as_p }}og
+    <button type="submit">Change Password</button>
+  </form>
+  {%endblock content%}
+</body>

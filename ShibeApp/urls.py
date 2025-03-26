@@ -1,27 +1,29 @@
 from django.urls import include, path
-from .views import authView, home
+from .views import authView
 from django.contrib.auth import views as auth_views
 from ShibeApp import views
-from .views import DebtorDetailView ,DebtorDeleteView
 
 app_name = 'ShibeApp'
 
 urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('', home , name = 'home'),
+    path('', views.home_combined, name='home'),
+
     path('signup/', authView, name='authView'), 
     path('accounts/', include('django.contrib.auth.urls')),
     path('profile/', views.profile, name='profile' ),
+    path('update_profile/', views.update_profile, name='update_profile'),
+    path('password_change/', auth_views.PasswordChangeView.as_view(template_name='changepass.html'), name='password_change'),
+    path('password_change_done/', auth_views.PasswordChangeDoneView.as_view(template_name='successpass.html'), name='password_change_done'),
     path('products/',views.product_list, name='product_list'),
     path('add_product/', views.add_product, name='add_product'),
-    path('product/<int:pk>/', views.ProductDetailView.as_view(), name='product_details'),
-    path('add_debtor/', views.add_debtor, name='add_debtor'),
+    path('save_debtor/', views.save_debtor_order, name='save_debtor_order'),
+    path('add_debtor/', views.save_debtor_order, name='add_debtor'),
     path('list_debtors/', views.list_debtors, name='list_debtors'),
-    path('debtor/<int:pk>/', DebtorDetailView.as_view(), name='debtor_detail'),
+    path('product/delete/<int:pk>/', views.delete_product, name='delete_product'),
+    path('product/update/<int:pk>/', views.update_product, name='update_product'),
     path('manage-roles/', views.manage_roles, name='manage_roles'),
-    path('delete-debtor/<int:debtor_id>/', views.delete_debtor, name='delete_debtor'),
-  
-    path('', views.calculate_totals, name='home'),
+    path('debtors/delete/<int:pk>/', views.delete_debtor, name='delete_debtor'),
+    path('fetch-product-data/', views.fetch_product_data, name='fetch_product_data'),
+]
 
-
- ] 

@@ -55,6 +55,31 @@
   font-size: 15px;
   margin-left: 400px;
 }
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #f8f8f8;
+  padding: 10px 20px;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.nav-button {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
 #registerBtn {
   margin-left: 15px;
 }
@@ -71,14 +96,26 @@ body {
   background: white;
 }
 .wrapper {
-  border-radius: 5px;
-  padding: 40px;
-  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+  width: 100%;
 }
+
 .form-wrap {
-  padding: 70px;
-  text-decoration: none;
+  max-width: 400px;
+  width: 90%; /* Use 90% of screen width on small devices */
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
 }
+
 .form-wrap form* {
   margin-top: 40px;
   display: block;
@@ -123,21 +160,15 @@ body {
   margin-bottom: 28px;
 }
 
-.form-wrap button {
-  border-radius: 5px;
-  background: rgba(192, 197, 192, 0.719);
-  color: fff;
-  text-align: center;
-  font-size: 15px;
-  padding: 12px 68px;
-  font-weight: 400;
-  border-radius: 30px;
+.form-wrap form button {
+  width: 100%; /* Button spans the entire width */
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
   border: none;
-  cursor: pointer;
-  margin-top: 38px;
-  line-height: 26px;
-  margin-left: 80px;
+  border-radius: 5px;
 }
+
 .signup-link {
   color: orange;
   font-size: 15px;
@@ -207,14 +238,15 @@ body {
   grid-template-areas:
     "sidebar header header header"
     "sidebar main main main";
-  height: 100vh;
-
-  margin: 0;
+  height: 100vh; /* Ensures the grid fills the entire viewport */
+  width: 100vw; /* Ensures the grid fills the browser width */
+  margin: 0; /* Removes external margins */
   padding: 0;
   box-sizing: border-box;
   background-color: white;
   color: #666666;
   font-family: "Montserrat", sans-serif;
+  overflow: hidden; /* Prevents scrolling due to overflow */
 }
 
 /* ---------- HEADER ---------- */
@@ -238,12 +270,13 @@ body {
 
 #sidebar {
   grid-area: sidebar;
-  height: 100%;
+  height: 100%; /* Full height of the container */
   background-color: rgba(216, 221, 221, 0.719);
   color: #080808;
   overflow-y: auto;
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
+  margin: 0; /* Removes any unintended margins */
+  padding: 0; /* Removes extra padding */
+  box-sizing: border-box; /* Ensures consistent dimensions */
 }
 
 .sidebar-title {
@@ -294,14 +327,21 @@ body {
       on small screens
     */
   z-index: 12 !important;
+  cursor: pointer;
 }
 
 /* ---------- MAIN ---------- */
 
 .main-container {
-  grid-area: main;
-  overflow-y: auto;
-  padding: 20px 20px;
+  grid-area: main; /* Matches the grid-area defined in the grid-container */
+  overflow-y: auto; /* Ensures vertical scrolling for overflowing content */
+  padding: 20px; /* Adds space inside the container */
+
+  /* Add the following to align properly */
+  margin: 0; /* Removes any unintended margins */
+  box-sizing: border-box; /* Ensures consistent element sizing */
+  background-color: white; /* Match the grid-container background */
+  border-left: 1px solid #ddd; /* Optional: Adds a subtle separation from the sidebar */
 }
 
 .main-title {
@@ -333,19 +373,19 @@ body {
 }
 
 .card:first-child {
-  border-left: 7px solid #0a6831;
+  border-left: 7px solid green;
 }
 
 .card:nth-child(2) {
-  border-left: 7px solid #f5b74f;
+  border-left: 7px solid orange;
 }
 
 .card:nth-child(3) {
-  border-left: 7px solid #367952;
+  border-left: 7px solid green;
 }
 
 .card:nth-child(4) {
-  border-left: 7px solid #0a6831;
+  border-left: 7px solid green;
 }
 
 .card > span {
@@ -416,40 +456,57 @@ body {
 /* ---------- MEDIA QUERIES ---------- */
 
 /* Medium <= 992px */
+/* Medium screens (<= 992px) */
 @media screen and (max-width: 992px) {
   .grid-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: 0.2fr 3fr;
+    grid-template-columns: 1fr; /* Single column for smaller screens */
+    grid-template-rows: auto 1fr; /* Flexible rows for responsiveness */
     grid-template-areas:
       "header"
       "main";
+    height: 100vh; /* Ensure it fills the viewport */
   }
 
   #sidebar {
-    display: none;
+    display: none; /* Hides the sidebar for medium screens */
   }
 
   .menu-icon {
-    display: inline;
+    display: inline-block; /* Ensures it's visible and takes inline-block layout */
+    cursor: pointer; /* Adds a pointer cursor for better UX */
   }
 
   .sidebar-title > span {
-    display: inline;
+    display: inline; /* Makes title span visible */
   }
 }
 
-/* Small <= 768px */
+/* Small screens (<= 768px) */
 @media screen and (max-width: 768px) {
   .main-cards {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-bottom: 0;
+    display: grid; /* Ensures grid layout is retained */
+    grid-template-columns: 1fr; /* Single column for small screens */
+    gap: 10px; /* Adjusted gap for better spacing */
+    margin-bottom: 0; /* Removes any unnecessary margins */
+    padding: 10px; /* Adds some padding for readability */
   }
 
-  .charts {
-    grid-template-columns: 1fr;
-    margin-top: 30px;
+  .grid-container {
+    grid-template-columns: 1fr; /* Single column layout */
+    grid-template-areas:
+      "header"
+      "main";
+    height: 100vh; /* Stays responsive to the viewport */
   }
+
+  .menu-icon {
+    display: inline-block; /* Ensures the menu icon remains accessible */
+  }
+}
+
+.charts {
+  grid-template-columns: 1fr;
+  margin-top: 30px;
 }
 
 /* Extra Small <= 576px */
@@ -641,5 +698,62 @@ body {
 
   .form-wrap {
     padding: 15px;
+  }
+}
+.form-wrap form {
+  margin-top: 40px; /* Maintain spacing from the top */
+  display: block; /* Display the form as a block-level element */
+  width: 100%; /* Let the form span the full width of its container */
+  text-decoration: none; /* Remove any text decoration (if links are inside the form) */
+  padding: 20px; /* Add inner padding for a clean, structured layout */
+  background-color: #f8f8f8; /* Light background color for the form */
+  border-radius: 10px; /* Rounded corners for a modern look */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
+  font-family: Arial, sans-serif; /* Ensure clean typography */
+}
+
+/* Style form fields inside the form */
+.form-wrap form input,
+.form-wrap form textarea,
+.form-wrap form select {
+  width: 95%; /* Adjust fields to be responsive within the form */
+  padding: 10px; /* Add padding for better usability */
+  margin-bottom: 15px; /* Space between input fields */
+  border: 1px solid #ccc; /* Light border for the fields */
+  border-radius: 30px; /* Rounded corners for inputs */
+  font-size: 16px; /* Enhance readability */
+}
+
+/* Style buttons inside the form */
+.form-wrap form button {
+  background-color: green; /* Green button color */
+  color: white; /* Button text color */
+  border: none; /* Remove borders */
+  padding: 10px 15px; /* Button size */
+  border-radius: 30px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor for hover effect */
+  font-size: 16px; /* Adjust text size for clarity */
+}
+
+/* Add hover effect for button */
+.form-wrap form button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Responsive adjustments */
+@media only screen and (max-width: 768px) {
+  .form-wrap form {
+    padding: 15px; /* Reduce padding on smaller screens */
+  }
+
+  .form-wrap form input,
+  .form-wrap form textarea,
+  .form-wrap form select {
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+
+  .form-wrap form button {
+    font-size: 14px; /* Adjust button text size for smaller screens */
+    padding: 8px 12px; /* Adjust button padding for smaller screens */
   }
 }

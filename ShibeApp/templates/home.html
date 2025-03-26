@@ -1,46 +1,47 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    :root {
-      --background-color: #f8f9fa;
-      --text-color: #333;
-      --card-background-color: #fff;
-      --header-background-color: #fff;
-      --sidebar-background-color: #0c0c0c;
-      --button-background-color: rgba(192, 197, 192, 0.719);
-    }
-
-    body.dark-mode {
-      --background-color: black;
-      --text-color: rgb(139, 122, 122);
-      --card-background-color: black;
-      --header-background-color: black;
-      --sidebar-background-color: black;
-      --button-background-color: rgb(241, 237, 228);
-    }
-
-    body {
-      background-color: var(--background-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 0;
-      font-family: "Montserrat", Arial, sans-serif;
-    }
-
-    .header,
-    .sidebar,
-    .main-container,
-    .card,
-    .charts-card {
-      background-color: var(--card-background-color);
-    }
-  </style>
 </head>
+<style>
+  .header-right {
+    position: relative;
+    display: inline-block;
+  }
 
-<body>
-  {% if user.is_authenticated and user.is_staff %}
+  .material-icons-outlined {
+    cursor: pointer;
+    font-size: 24px;
+  }
 
+  .dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%; /* Place below the icon */
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 1000;
+  }
+
+  .dropdown-menu a {
+    text-decoration: none;
+    color: black;
+    display: block;
+  }
+
+  .dropdown-menu a:hover {
+    background-color: #f0f0f0;
+  }
+
+  /* Hover effect to show the dropdown */
+  .header-right:hover .dropdown-menu {
+    display: block; /* Show the dropdown on hover */
+  }
+</style>
+
+<body style="transition: background-color 0.3s ease, color 0.3s ease">
   <div class="grid-container">
     <!-- Header -->
     <header class="header">
@@ -49,27 +50,35 @@
       </div>
       <div class="header-left"></div>
       <div class="header-right">
-        <span class="material-icons-outlined">notifications</span>
-        <span class="material-icons-outlined">account_circle</span>
+        <span class="material-icons-outlined dropdown-trigger"
+          >account_circle</span
+        >
+
+        <!-- Dropdown menu -->
+        <div class="dropdown-menu">
+          <a href="{% url 'ShibeApp:logout' %}">Logout</a>
+        </div>
       </div>
-      <button id="theme-toggle" style="position: fixed; top: 24px; right: 10px">
-        <i class="fas fa-toggle-on"></i>
-        <!-- This is the toggle icon -->
-      </button>
     </header>
     <!-- End Header -->
 
-    <!-- Sidebar -->
     <aside id="sidebar">
       <div class="sidebar-title">
         <div class="nav-logo">
-          <p>
-            <span style="color: green">
-              <span style="color: orange">Shibe</span></span
-            >
-            Products
-          </p>
+          <a href="{% url 'ShibeApp:home'%}" target="_self">
+            <img
+              src="{% static 'images/shibe.png' %}"
+              alt="Shibe Product"
+              style="
+                width: 70px;
+                height: 70px;
+                margin-top: 20px;
+                margin-left: 10px;
+                cursor: pointer;
+              "
+          /></a>
         </div>
+
         <span class="material-icons-outlined" onclick="closeSidebar()"
           >close</span
         >
@@ -77,68 +86,63 @@
 
       <ul class="sidebar-list">
         <li class="sidebar-list-item">
-          <a href="#" target="_blank">
+          <a href="#" target="_self">
             <span class="material-icons-outlined">dashboard</span> Dashboard
           </a>
         </li>
         <li class="sidebar-list-item">
-          <a href="{% url 'ShibeApp:product_list' %}" target="_blank">
+          <a href="{% url 'ShibeApp:product_list' %}" target="_self">
             <span class="material-icons-outlined">inventory_2</span> Products
           </a>
         </li>
         <li class="sidebar-list-item">
-          <a href="{% url 'ShibeApp:list_debtors' %}" target="_blank">
+          <a href="{% url 'ShibeApp:list_debtors' %}" target="_self">
             <span class="material-icons-outlined">fact_check</span> Debts
-          </a>
-        </li>
-        <li class="sidebar-list-item">
-          <a href="{% url 'ShibeApp:manage_roles'%}" target="_blank">
-            <span class="material-icons-outlined">settings</span> Settings
           </a>
         </li>
       </ul>
     </aside>
-    <!-- End Sidebar -->
 
     <!-- Main -->
     <main class="main-container">
       <div class="main-title">
-        <p class="font-weight-bold">DASHBOARD</p>
+        <p class="font-weight-bold" style="color: black">DASHBOARD</p>
       </div>
 
-      <div class="main-cards">
+      <div
+        class="main-cards"
+        style="display: flex; justify-content: center; align-items: center"
+      >
         <div class="main-cards">
           <div class="card">
             <div class="card-inner">
-              <p class="text-primary">Paid Debts</p>
+              <p class="text-primary" style="color: black">Paid Debts</p>
               <span class="material-icons-outlined text-blue">paid</span>
             </div>
-            <span class="text-primary font-weight-bold">
+            <span class="text-primary font-weight-bold" style="color: black">
               {{ total_paid_debts }}
             </span>
           </div>
 
           <div class="card">
             <div class="card-inner">
-              <p class="text-primary">Pending Debts</p>
+              <p class="text-primary" style="color: black">Pending Debts</p>
               <span class="material-icons-outlined text-orange">pending</span>
             </div>
-            <span class="text-primary font-weight-bold">
+            <span class="text-primary font-weight-bold" style="color: black">
               {{ total_pending_debts }}
             </span>
           </div>
         </div>
       </div>
 
-      <div class="charts">
+      <div
+        class="charts"
+        style="display: flex; justify-content: center; align-items: center"
+      >
         <div class="charts-card">
-          <p class="chart-title">Top Borrowed Products</p>
+          <p class="chart-title" style="color: black">Top Borrowed Products</p>
           <div id="bar-chart"></div>
-        </div>
-
-        <div class="charts-card">
-          <p class="chart-title">Debtors and Payments</p>
-          <div id="area-chart"></div>
         </div>
       </div>
     </main>
@@ -170,7 +174,7 @@
     const barChartOptions = {
       series: [
         {
-          data: [10, 8, 6, 4],
+          data: [10, 8, 6, 4, 2, 1],
         },
       ],
       chart: {
@@ -180,7 +184,14 @@
           show: false,
         },
       },
-      colors: ["#246dec", "#cc3c43", "#367952", "#f5b74f"],
+      colors: [
+        "#246dec",
+        "#cc3c43",
+        "#367952",
+        "#f5b74f",
+        "#cc3c43",
+        "#cc3c43",
+      ],
       plotOptions: {
         bar: {
           distributed: true,
@@ -196,7 +207,14 @@
         show: false,
       },
       xaxis: {
-        categories: ["unga wa sembe", "dona", "kande", "unga wa lishe"],
+        categories: [
+          "unga 25kg",
+          "unga 10kg",
+          "unga 5kg",
+          "kande 25kg",
+          "lishe 3kg",
+          "lishe dozen",
+        ],
       },
       yaxis: {
         title: {
@@ -223,41 +241,6 @@
           data: [11, 32, 45, 32, 34, 52, 41],
         },
       ],
-      chart: {
-        height: 350,
-        type: "area",
-        toolbar: {
-          show: false,
-        },
-      },
-      colors: ["#4f35a1", "#246dec"],
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: "smooth",
-      },
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-      markers: {
-        size: 0,
-      },
-      yaxis: [
-        {
-          title: {
-            text: "debtors",
-          },
-        },
-        {
-          opposite: true,
-          title: {
-            text: "payments",
-          },
-        },
-      ],
-      tooltip: {
-        shared: true,
-        intersect: false,
-      },
     };
 
     const areaChart = new ApexCharts(
@@ -265,13 +248,7 @@
       areaChartOptions
     );
     areaChart.render();
-
-    const themeToggle = document.getElementById("theme-toggle");
-    const body = document.body;
-
-    themeToggle.addEventListener("click", () => {
-      body.classList.toggle("dark-mode");
-    });
   </script>
 </body>
-{% endif %} {% endblock content %}
+
+{% endblock content %}

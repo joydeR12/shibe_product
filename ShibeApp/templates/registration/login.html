@@ -1,13 +1,20 @@
 {% extends 'base.html'%} {% load static %} {% block content %}
+
 <div class="wrapper">
   <nav class="nav">
     <div class="nav-logo">
-      <p>
-        <span style="color: green">
-          <span style="color: orange">Shibe</span></span
-        >
-        Products
-      </p>
+      <a href="{% url 'ShibeApp:home'%}">
+        <img
+          src="{% static 'images/shibe.png' %}"
+          alt="Shibe Product"
+          style="
+            width: 70px;
+            height: 70px;
+            margin-top: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+          "
+      /></a>
     </div>
 
     <div class="nav-button">
@@ -37,10 +44,6 @@
         {% csrf_token %} {{form}}
         <button type="submit">login</button>
       </form>
-      <div class="container">
-        <p style="font-size: 15px">don't have an account?</p>
-        <a class="signup-link" href="{% url 'ShibeApp:authView' %}">Signup</a>
-      </div>
     </div>
   </div>
   {% endblock content %}

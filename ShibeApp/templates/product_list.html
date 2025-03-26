@@ -13,23 +13,6 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
   />
   <style>
-    :root {
-      --background-color: #f8f9fa;
-      --text-color: #333;
-      --card-background-color: #fff;
-      --header-background-color: #fff;
-      --sidebar-background-color: #fff;
-      --button-background-color: rgba(192, 197, 192, 0.719);
-    }
-
-    body.dark-mode {
-      --background-color: black;
-      --text-color: rgb(139, 122, 122);
-      --card-background-color: black;
-      --header-background-color: black;
-      --sidebar-background-color: black;
-      --button-background-color: rgb(241, 237, 228);
-    }
     body {
       background-color: var(--background-color);
       color: var(--text-color);
@@ -38,13 +21,6 @@
       font-family: "Montserrat", Arial, sans-serif;
     }
 
-    .header,
-    .sidebar,
-    .main-container,
-    .card,
-    .charts-card {
-      background-color: var(--card-background-color);
-    }
     h1 {
       color: #333;
     }
@@ -138,6 +114,14 @@
       font-weight: 500;
     }
 
+    input[type="number"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
     /* Media Queries */
     @media (max-width: 768px) {
       .bt {
@@ -180,16 +164,23 @@
   </style>
 </head>
 <body>
-  <p>
-    <span style="color: green"> <span style="color: orange">Shibe</span></span>
-    Products
-  </p>
-  <button id="theme-toggle" style="position: fixed; top: 24px; right: 10px">
-    <i class="fas fa-toggle-on"></i>
-    <!-- This is the toggle icon -->
-  </button>
+  <div class="nav-logo">
+    <a href="{% url 'ShibeApp:home'%}">
+      <img
+        src="{% static 'images/shibe.png' %}"
+        alt="Shibe Product"
+        style="
+          width: 70px;
+          height: 70px;
+          margin-top: 20px;
+          margin-left: 10px;
+          cursor: pointer;
+        "
+    /></a>
+  </div>
+
   <div class="ttle">
-    <h1>Product <span>list</span></h1>
+    <h2>Product <span>list</span></h2>
   </div>
 
   <div class="bt">
@@ -199,37 +190,24 @@
   <table>
     <tr>
       <th>Product Name</th>
-      <th>Price</th>
-      <th>Description</th>
-      <th>User</th>
+      <th>price of each item</th>
       <th>Actions</th>
     </tr>
     {% for product in products %}
     <tr>
       <td class="product-name">{{ product.title }}</td>
-      <td class="product-price">{{ product.price }}</td>
-      <td class="product-description">{{ product.description }}</td>
-      <td class="product-user">{{ product.user }}</td>
+      <td class="price-cell">{{ product.price }}</td>
+
       <td>
         <div class="icon-container">
-          <a href="{% url 'ShibeApp:product_details' product.pk %}">
+          <a class="delete-link" data-id="{{ product.pk }}">
+            <img src="{% static 'images/delete_icon.png' %}"
+          /></a>
+
+          <a class="edit-link" data-id="{{ product.pk }}">
             <img
-              src="{% static 'images/view_icon.png' %}"
-              alt="View"
-              class="icon"
-            />
-          </a>
-          <a href="#" class="delete-link" data-id="{{ product.pk }}">
-            <img
-              src="{% static 'images/delete_icon.png' %}"
-              alt="Delete"
-              class="icon"
-            />
-          </a>
-          <a href="{% url 'ShibeApp:add_product' %}">
-            <img
-              src="{% static 'images/add_icon.png' %}"
-              alt="Add"
+              src="{% static 'images/edit_icon.png' %}"
+              alt="Edit"
               class="icon"
             />
           </a>
@@ -240,32 +218,117 @@
   </table>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // ======================
+      // DELETE FUNCTIONALITY
+      // ======================
       const deleteLinks = document.querySelectorAll(".delete-link");
 
       deleteLinks.forEach(function (link) {
         link.addEventListener("click", function (event) {
           event.preventDefault();
+          const productId = this.getAttribute("data-id");
+          const productRow = this.closest("tr");
+
           const userConfirmed = confirm(
             "Are you sure you want to delete the product?"
           );
-          if (userConfirmed) {
-            // Get the product row
-            const productRow = this.closest("tr");
-            // Remove the product row from the table
-            productRow.remove();
-            alert("Product deleted!");
-          } else {
+
+          if (userConfirmed && productRow) {
+            fetch(`/product/delete/${productId}/`, {
+              method: "DELETE",
+              headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  productRow.remove();
+                  alert("Product deleted successfully!");
+                } else {
+                  alert("Failed to delete product: " + data.message);
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("An error occurred while deleting the product.");
+              });
+          } else if (!userConfirmed) {
             alert("Deletion canceled.");
+          } else {
+            console.error("Product row not found!");
           }
         });
       });
-    });
 
-    const themeToggle = document.getElementById("theme-toggle");
-    const body = document.body;
+      // ======================
+      // EDIT FUNCTIONALITY
+      // ======================
+      const editLinks = document.querySelectorAll(".edit-link");
 
-    themeToggle.addEventListener("click", () => {
-      body.classList.toggle("dark-mode");
+      editLinks.forEach((editBtn) => {
+        editBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          const productId = this.getAttribute("data-id");
+          const row = this.closest("tr");
+
+          if (!row) {
+            console.error("Parent row not found!");
+            return;
+          }
+
+          const priceCell = row.querySelector(".price-cell");
+          if (!priceCell) {
+            console.error("Price cell not found!");
+            return;
+          }
+
+          const currentPrice = priceCell.textContent.trim();
+
+          // Create editable input
+          priceCell.innerHTML = `
+        <input type="number" value="${currentPrice}" class="price-input">
+        <button class="save-btn">Save</button>
+        <button class="cancel-btn">Cancel</button>
+      `;
+
+          // Save functionality
+          priceCell.querySelector(".save-btn").addEventListener("click", () => {
+            const newPrice = priceCell.querySelector(".price-input").value;
+
+            fetch(`/product/update/${productId}/`, {
+              method: "POST",
+              headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: `price=${newPrice}`,
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  priceCell.textContent = newPrice;
+                  alert("Price updated!");
+                } else {
+                  alert("Error: " + data.message);
+                  priceCell.textContent = currentPrice; // Revert on error
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                priceCell.textContent = currentPrice; // Revert on failure
+              });
+          });
+
+          // Cancel functionality
+          priceCell
+            .querySelector(".cancel-btn")
+            .addEventListener("click", () => {
+              priceCell.textContent = currentPrice;
+            });
+        });
+      });
     });
   </script>
 </body>

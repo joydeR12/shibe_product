@@ -1,34 +1,40 @@
-{% extends 'base.html'%}
-{% load static %}
-{% block content %}
+{% extends 'base.html'%} {% load static %} {% block content %}
 <div class="wrapper">
-<nav class="nav">
-<div class="nav-logo">
-  <p><span style="color: green;"> <span style="color: orange;">Shibe</span></span> Products</p> 
-</div>
+  <nav class="nav">
+    <div class="nav-logo">
+      <a href="{% url 'ShibeApp:home'%}">
+        <img
+          src="{% static 'images/shibe.png' %}"
+          alt="Shibe Product"
+          style="
+            width: 70px;
+            height: 70px;
+            margin-top: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+          "
+      /></a>
+    </div>
 
-<div class="nav-button">
-   <a href="{% url 'ShibeApp:login' %}"><button class="btn" id="loginBtn">sign in</button></a>
-   <a href="{% url 'ShibeApp:authView' %}"><button class="btn" id="registerBtn">sign up</button></a>
-</div>
-</nav>
+    <div class="nav-button">
+      <a href="{% url 'ShibeApp:login' %}"
+        ><button class="btn" id="loginBtn">sign in</button></a
+      >
+      <a href="{% url 'ShibeApp:authView' %}"
+        ><button class="btn" id="registerBtn">sign up</button></a
+      >
+    </div>
+  </nav>
 
-  
   <div class="wrapper">
-   <div class="form-wrap" style="margin-top: 50px;">
+    <div class="form-wrap" style="margin-top: 50px">
       <div class="form-instructions">
         <form method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button type="submit" style="margin-left: 7px;">sign up</button>
- </form>   
+          {% csrf_token %} {{form}}
+          <button type="submit" style="margin-left: 7px">sign up</button>
+        </form>
       </div>
-   
- 
-  </div> 
-  {% endblock content %} 
-
-  
-
-
- 
+    </div>
+    {% endblock content %}
+  </div>
+</div>
