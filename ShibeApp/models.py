@@ -18,7 +18,7 @@ class Product(models.Model):
       )
       image = models.ImageField(upload_to='user_directory_path',default='product.jpg')
       price = models.DecimalField(max_digits=10,decimal_places=2)
-      old_price = models.DecimalField(max_digits=10,decimal_places=2, default='2.99')
+      old_price = models.DecimalField(max_digits=10,decimal_places=2, default='0.00')
      
       date = models.DateTimeField(auto_now_add=True)
       update = models.DateTimeField(null=True,blank=True)
@@ -37,8 +37,8 @@ class Product(models.Model):
          return new_price
 
 class Debtor(models.Model):
-   debtor_name = models.CharField(max_length=255)
-   debtor_phone = models.CharField(max_length=20)
+   debtor_name = models.CharField(max_length=255, unique=True)
+   debtor_phone = models.CharField(max_length=20, unique=True)
    date_created = models.DateTimeField(auto_now_add=True)
 
    class Meta:
@@ -47,6 +47,10 @@ class Debtor(models.Model):
    
    def __str__(self):
       return self.debtor_name
+   
+   @property
+   def total_debt(self):
+        return self.debitororder_set.aggregate(sum('total_price'))['total_price__sum'] or 0
 
    
 class CartItem(models.Model):
@@ -58,9 +62,9 @@ class CartItem(models.Model):
 class DebitorOrder(models.Model):
     debitor = models.ForeignKey(Debtor, on_delete=models.CASCADE)
     status = models.CharField(max_length=100, choices=[('Pending', 'Pending'), ('Completed', 'Completed')])
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    debt_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    debt_pending = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default='0.00')
+    debt_paid = models.DecimalField(max_digits=10, decimal_places=2, default='0.00')
+    debt_pending = models.DecimalField(max_digits=10, decimal_places=2, default='0.00')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True)
 

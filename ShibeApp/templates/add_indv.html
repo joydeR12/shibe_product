@@ -54,40 +54,37 @@
     background-color: darkorange;
   }
 
-  h2 {
-    color: #333;
-    text-align: center;
-    margin-top: -450px;
-    margin-left: 450px;
+  body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    margin: 0;
+    padding: 20px;
   }
-
-  /* Logo positioning */
   .nav-logo {
     position: absolute;
     top: 20px;
     left: 20px;
     z-index: 1000;
   }
-
   .nav-logo img {
     width: 70px;
     height: 70px;
     cursor: pointer;
-    /* Remove any margin/padding that might affect positioning */
-    margin: 0;
-    padding: 0;
   }
-
-  /* Container adjustment */
   .container {
-    margin-top: 100px; /* Create space below the logo */
-    /* Rest of your container styles */
+    max-width: 600px;
+    margin: 100px auto 0; /* Adjusted for logo space */
+    background: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 90%;
   }
-
-  /* Ensure body doesn't have overflow hidden */
-  body {
-    overflow: visible;
-    position: relative;
+  h2 {
+    color: #333;
+    text-align: center;
+    margin-top: -450px;
+    margin-left: 200px;
   }
 </style>
 <body>
@@ -96,15 +93,12 @@
       <img src="{% static 'images/shibe.png' %}" alt="Shibe Product"
     /></a>
   </div>
-  <h2>add of Debtors</h2>
+
+  <h2>add another products</h2>
+
   <div class="container">
     <form id="debtorForm" method="POST">
       {% csrf_token %}
-      <label>Debtor Name:</label>
-      <input type="text" name="debtor_name" required /><br />
-
-      <label>Debtor Phone:</label>
-      <input type="text" name="debtor_phone" required /><br />
 
       <label>Debt Paid:</label>
       <input type="number" name="debt_paid" required /><br />
@@ -120,6 +114,23 @@
     </form>
   </div>
 
+  <button
+    style="
+      margin-top: 150px;
+      margin-right: 15px;
+      width: 15%;
+      height: 40px;
+      border-radius: 30px;
+      border: none;
+      font-family: 'Montserrat', Arial, sans-serif;
+    "
+  >
+    <a
+      href="{% url 'ShibeApp:list_debtors' %}"
+      style="text-decoration: none; color: black"
+      >Back to List</a
+    >
+  </button>
   <script>
     let products = JSON.parse("{{ product|escapejs }}");
     console.log(products);
@@ -175,13 +186,12 @@
         let formData = new FormData(this);
         formData.append("items", JSON.stringify(items));
 
-        fetch("{% url 'ShibeApp:save_debtor_order' %}", {
+        fetch("{% url 'ShibeApp:add_indv' debtor.id %}", {
           method: "POST",
           body: formData,
         }).then((response) => {
           if (response.ok) {
             alert("Order saved successfully");
-            window.location.href = "/";
           }
         });
       });

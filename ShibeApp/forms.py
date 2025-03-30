@@ -13,7 +13,11 @@ class ProductForm(forms.ModelForm):
         self.fields['title'].widget.attrs['placeholder'] = 'Select Product'
         self.fields['price']
 
-
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if Product.objects.filter(title=title).exists():
+            raise forms.ValidationError("This product already exists!")
+        return title
 
 
 
@@ -75,3 +79,10 @@ class PaymentForm(forms.Form):
             'step': '0.01'
         })
     )
+
+
+class DebtorForm(forms.Form):
+    debtor_name = forms.CharField(max_length=255)
+    debtor_phone = forms.CharField(max_length=20, required=False)
+    total_price = forms.DecimalField(min_value=0)
+    debt_paid = forms.DecimalField(min_value=0)

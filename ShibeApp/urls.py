@@ -19,11 +19,15 @@ urlpatterns = [
     path('add_product/', views.add_product, name='add_product'),
     path('save_debtor/', views.save_debtor_order, name='save_debtor_order'),
     path('add_debtor/', views.save_debtor_order, name='add_debtor'),
+    path('add_indv/<int:debtor_id>/', views.add_indv, name='add_indv'),
     path('list_debtors/', views.list_debtors, name='list_debtors'),
     path('product/delete/<int:pk>/', views.delete_product, name='delete_product'),
     path('product/update/<int:pk>/', views.update_product, name='update_product'),
     path('manage-roles/', views.manage_roles, name='manage_roles'),
     path('debtors/delete/<int:pk>/', views.delete_debtor, name='delete_debtor'),
     path('fetch-product-data/', views.fetch_product_data, name='fetch_product_data'),
+    path('debtors/<int:debtor_id>/history/', views.debtor_history, name='debtor_history'),
+    path('update-payment/<int:order_id>/', views.update_payment, name='update_payment'),
+    path('debtors/update/<int:order_id>/', views.update_debt, name='update_debt'),
 ]
 

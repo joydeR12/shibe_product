@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Debtor, Product, DebitorProduct, DebitorOrder
 from .forms import ProductForm, DebtorForm
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.http import JsonResponse
 from django.db.models import Sum
@@ -13,6 +13,9 @@ from ShibeApp import models
 from django.conf import settings 
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.http import require_POST
+from django.db.models import Sum
+from decimal import Decimal
+from django.db.models import Q
 
 def authView(request):
     if request.method == "POST":
@@ -40,22 +43,62 @@ def update_profile(request):
         return redirect('profile')  # Redirect back to the profile page
 
 @login_required
+# def product_list(request):
+#     products = Product.objects.all()
+#     return render(request, 'product_list.html', {'products': products})
+
+
 def product_list(request):
+    query = request.GET.get('q')  # Get search parameter from URL
     products = Product.objects.all()
-    return render(request, 'product_list.html', {'products': products})
+    
+    if query:
+        # Filter products where title contains the search term (case-insensitive)
+        products = products.filter(title__icontains=query)
+    
+    return render(request, 'product_list.html', {
+        'products': products,
+        'search_query': query  # Pass query back to template
+    })
 
 @login_required
+# def add_product(request):
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('/')
+#         else:
+#             return HttpResponse('the product already exists please press the back arrow to continue ')
+#     else:
+#         form = ProductForm()
+#     return render(request, 'add_product.html', {'form': form})
+
+
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('/')
+            try:
+                form.save()
+                return redirect('/')
+            except:
+                # Render error message template when save fails
+                return render(request, 'error_message.html', {
+                    'message': 'The product already exists. Please press back to continue.',
+                    'title': 'Product Exists'
+                })
         else:
-            return HttpResponse('Error')
-    else:
-        form = ProductForm()
+            # Render error message template when form is invalid
+            return render(request, 'error.html', {
+                'message': 'The product already added!!!. Please press back to change the product',
+                'title': 'Form Error'
+            })
+    
+    # GET request - show empty form
+    form = ProductForm()
     return render(request, 'add_product.html', {'form': form})
+
 
 
 
@@ -108,43 +151,48 @@ def save_debtor_order(request):
     return render(request, 'add_debtor.html', context)
 
 @login_required
+
+
+# def list_debtors(request):
+#     debtors = DebitorOrder.objects.all()
+#     return render(request, 'list_debtors.html', {'debtors': debtors})
+
+
+# def list_debtors(request):
+#     # Get all unique debtors with their aggregated sums
+#     debtors = Debtor.objects.annotate(
+#         total_orders=Sum('debitororder__total_price', default=0),
+#         total_paid=Sum('debitororder__debt_paid', default=0),
+#         total_pending=Sum('debitororder__debt_pending', default=0)
+#     ).order_by('-date_created')
+    
+#     return render(request, 'list_debtors.html', {'debtors': debtors})
+
 def list_debtors(request):
-    debtors = DebitorOrder.objects.all()
-    return render(request, 'list_debtors.html', {'debtors': debtors})
-
-
-
-# Updated calculate_debt function
-def calculate_debt(request):
-    if request.method == 'POST':
-        # Retrieve values from the form
-        product_price = float(request.POST.get('product_price', 0))
-        number_of_products = int(request.POST.get('number_of_products', 0))
-        debt_paid = float(request.POST.get('debt_paid', 0))
-        debtor_name = request.POST.get('debtor_name', '')
-        debtor_phone = request.POST.get('debtor_phone', '')
-        name_of_products = request.POST.get('name_of_products', '')
-
-        # Calculate total price (product price * number of products)
-        total_price = product_price * number_of_products
-
-        # Perform the necessary calculations
-        debt_pending = total_price - debt_paid
-
-        # Save the data into the database
-        Debtor.objects.create(
-            debtor_name=debtor_name,
-            debtor_phone=debtor_phone,
-            product_price=total_price,  # Save the total price
-            name_of_products=name_of_products,
-            debt_paid=debt_paid,
-            debt_pending=debt_pending,
-        )        # Redirect to a page or render a response
-        return redirect('ShibeApp:list_debtors')  # Ensure this URL name corresponds to your list view
-
-    # Render the form template for GET requests
-    return render(request, 'add_debtor.html')
-
+    # Get search query from request
+    search_query = request.GET.get('search', '')
+    
+    # Get all unique debtors with their aggregated sums
+    debtors = Debtor.objects.all()
+    
+    if search_query:
+        # Filter debtors by name or phone number containing the search query (case-insensitive)
+        debtors = debtors.filter(
+            Q(debtor_name__icontains=search_query) |
+            Q(debtor_phone__icontains=search_query)
+        )
+    
+    # Annotate with aggregated sums
+    debtors = debtors.annotate(
+        total_orders=Sum('debitororder__total_price', default=0),
+        total_paid=Sum('debitororder__debt_paid', default=0),
+        total_pending=Sum('debitororder__debt_pending', default=0)
+    ).order_by('-date_created')
+    
+    return render(request, 'list_debtors.html', {
+        'debtors': debtors,
+        'search_query': search_query
+    })
 
 @login_required
 def home_combined(request):
@@ -236,4 +284,107 @@ def delete_product(request, pk):
     
 
 
+def debtor_history(request, debtor_id):
+    debtor = get_object_or_404(Debtor, id=debtor_id)
+    orders = DebitorOrder.objects.filter(debitor=debtor).order_by('-date_created')
+    return render(request, 'debtor_history.html', {
+        'debtor': debtor,
+        'orders': orders
+    })
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def update_payment(request, order_id):
+    if request.method == 'POST':
+        try:
+            order = DebitorOrder.objects.get(id=order_id)
+            new_paid = float(request.POST.get('debt_paid'))
+            
+            # Update payment
+            order.debt_paid = new_paid
+            order.debt_pending = order.total_price - new_paid
+            order.save()
+            
+            return JsonResponse({
+                'success': True,
+                'new_pending': order.debt_pending
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            })
+    return JsonResponse({'success': False})
+
+
+@csrf_exempt  # Keep this temporarily for debugging
+def add_indv(request, debtor_id):
+    total_price = 0
+    products = Product.objects.all()
+    debtor = get_object_or_404(Debtor,id=debtor_id)
+    if request.method == 'POST':
+        # Deserialize the JSON string into a Python object (list of dictionaries)
+        items = json.loads(request.POST['items'])  
+        debt_paid = request.POST['debt_paid']
+        
+
+        for item in items:
+            price = int(float(item['product_price']))  # Ensure proper type conversion
+            print("Type of Price: ", type(price))
+            total_price += price * int(item['quantity'])
+
+        debt_pending = total_price - int(debt_paid)
+        debitor_order = DebitorOrder.objects.create(
+            debitor=debtor,
+            total_price=total_price,
+            debt_paid=int(debt_paid),
+            debt_pending=int(debt_pending),
+            status='Pending'
+        )
+        for item in items:
+            DebitorProduct.objects.create(
+                debitor_order=debitor_order,
+                product=Product.objects.get(id=int(item['id'])),
+                quantity=int(item['quantity']),
+                is_ordered=True
+            )
+        return redirect('/')
+
+
+    
+    product = json.dumps(
+        list(products.values('id', 'title', 'price')),
+        default=str  # Converts Decimal to string
+    )
+    print(product)
+    context = {
+        'product': product,
+        'debtor': debtor,
+    }
+    return render(request, 'add_indv.html', context)
+    
+
+def update_debt(request, order_id):
+    if request.method == 'POST':
+        order = get_object_or_404(DebitorOrder, id=order_id)
+        paid_amount = Decimal(request.POST.get('paid_amount', 0))
+        
+        try:
+            # Update debt values
+            order.debt_paid += paid_amount
+            order.debt_pending -= paid_amount
+            
+            # Update status if fully paid
+            if order.debt_pending <= 0:
+                order.status = "Completed"
+                
+            order.save()
+            return redirect('ShibeApp:debtor_history', debtor_id=order.debitor.id)
+            
+        except Exception as e:
+            print(f"Error updating order: {e}")
+    
+    return redirect('ShibeApp:list_debtors')  # Fallback redirect
 
