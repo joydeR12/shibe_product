@@ -81,7 +81,7 @@ def add_product(request):
         if form.is_valid():
             try:
                 form.save()
-                return redirect('/')
+                return redirect('/products/')
             except:
                 # Render error message template when save fails
                 return render(request, 'error_message.html', {
@@ -136,7 +136,7 @@ def save_debtor_order(request):
                 quantity=int(item['quantity']),
                 is_ordered=True
             )
-        return redirect('/')
+        return redirect('/list_debtors/')
 
 
     

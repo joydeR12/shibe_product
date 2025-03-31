@@ -44,11 +44,13 @@
       color: black;
       border: none;
       box-sizing: border-box;
+      font-family: "Montserrat", Arial, sans-serif;
     }
 
     input[type="text"]::placeholder,
     textarea::placeholder {
       color: black;
+      font-family: "Montserrat", Arial, sans-serif;
     }
 
     button {
@@ -108,12 +110,14 @@
       font-size: 1em;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-family: "Montserrat", Arial, sans-serif;
     }
 
     .form-field input[type="text"]:focus,
     .form-field select:focus {
-      border-color: #007bff;
+      border: 1px solid #ccc;
       outline: none;
+      font-family: "Montserrat", Arial, sans-serif;
     }
 
     .form-field input[type="number"],
@@ -123,12 +127,14 @@
       font-size: 1em;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-family: "Montserrat", Arial, sans-serif;
     }
 
     .form-field input[type="number"]:focus,
     .form-field select:focus {
-      border-color: #007bff;
+      border: 1px solid #ccc;
       outline: none;
+      font-family: "Montserrat", Arial, sans-serif;
     }
 
     /* Buttons */
@@ -202,13 +208,15 @@
         style="
           width: 70px;
           height: 70px;
-          margin-top: -15px;
-          transform: scale(1.05);
+          margin-top: 20px;
+          margin-left: 10px;
           cursor: pointer;
+          transform: scale(1.05);
         "
-    /></a>
+      />
+    </a>
   </div>
-  <h2 style="margin-left: 550px">add product</h2>
+  <h2 style="text-align: center">add product</h2>
   <form method="POST" enctype="multipart/form-data" id="add-product-form">
     {% csrf_token %}
 
