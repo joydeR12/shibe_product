@@ -1,0 +1,433 @@
+{% load static %} {% block content %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shibe product</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+  <style>
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-family: "Montserrat", Arial, sans-serif; /* Apply Montserrat font to the button */
+      background: rgba(192, 197, 192, 0.719);
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 130px;
+      height: 40px;
+      font-weight: 500;
+      transform: 0.3s ease;
+      font-size: 15px;
+      margin: 5px;
+      box-sizing: border-box; /* Ensure padding and border are included in width */
+    }
+
+    button:hover {
+      background: rgba(216, 221, 221, 0.719);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      word-wrap: break-word; /* Handle long text */
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .icon {
+      cursor: pointer;
+      margin-right: 5px; /* Add some space between icons */
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-container img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .bt {
+      width: 100%;
+      max-width: 130px;
+      font-weight: 500;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transform: 0.3s ease;
+      font-size: 15px;
+      margin: 0 auto 50px; /* Center button */
+      display: block;
+    }
+
+    .ttle {
+      text-align: center;
+      margin-top: 0%;
+    }
+    .product-price {
+      color: #ecb607;
+      font-weight: 500;
+    }
+
+    .product-user {
+      color: #28a745;
+      font-weight: 500;
+    }
+
+    input[type="number"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .bt {
+        width: 100%;
+        max-width: none;
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+
+      .icon-container {
+        justify-content: space-between;
+      }
+
+      table,
+      th,
+      td {
+        font-size: 14px;
+        padding: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .bt {
+        font-size: 12px;
+      }
+
+      button {
+        font-size: 12px;
+      }
+
+      th,
+      td {
+        font-size: 12px;
+        padding: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-logo">
+    <a href="{% url 'ShibeApp:home'%}">
+      <img
+        src="{% static 'images/shibe.png' %}"
+        alt="Shibe Product"
+        style="
+          width: 70px;
+          height: 70px;
+          margin-top: 40px;
+          margin-left: 30px;
+          cursor: pointer;
+          transform: scale(1.05);
+        "
+      />
+    </a>
+  </div>
+
+  <div class="ttle">
+    <h2>Product <span>list</span></h2>
+  </div>
+  <div class="bt">
+    <a href="{% url 'ShibeApp:add_product' %}"><button>Add</button></a>
+  </div>
+
+  <div class="search-container" style="margin-bottom: 20px">
+    <form method="get" action="">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search products..."
+        value="{{ search_query|default:'' }}"
+        style="
+          padding: 8px;
+          width: 300px;
+          font-family: 'Montserrat', Arial, sans-serif;
+          border-radius: 30px;
+        "
+      />
+      <button
+        type="submit"
+        style="
+          background: none;
+          border: none;
+          margin-left: -40px; /* This pulls the icon inside the input */
+          cursor: pointer;
+          z-index: 2;
+        "
+        aria-label="Search"
+      >
+        <img
+          src="{% static 'images/search_icon.png' %}"
+          alt="Search"
+          style="width: 20px; height: 20px"
+        />
+      </button>
+
+      {% if search_query %}
+      <a
+        href="{% url 'ShibeApp:product_list' %}"
+        style="
+          margin-left: 10px;
+          color: black;
+          text-decoration: none;
+          font-size: 14px;
+        "
+      >
+        Clear search
+      </a>
+      {% endif %}
+    </form>
+  </div>
+
+  {% if no_results %}
+  <div
+    class="no-results-message"
+    style="
+      padding: 20px;
+      background: #fff8e1;
+      border-left: 4px solid #ffc107;
+      margin: 20px 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+    "
+  >
+    <p>No products found matching <strong>"{{ search_query }}"</strong></p>
+    <p>
+      Available products: {% for value, label in product_choices %} {{ label
+      }}{% if not forloop.last %}, {% endif %} {% endfor %}
+    </p>
+    <a
+      href="{% url 'ShibeApp:product_list' %}"
+      style="color: #2196f3; text-decoration: none"
+      >Show all products</a
+    >
+  </div>
+  {% else %}
+  <table style="width: 100%; border-collapse: collapse; margin-top: 20px">
+    <thead>
+      <tr style="background-color: #f2f2f2">
+        <th style="padding: 12px; text-align: left">Product Name</th>
+        <th style="padding: 12px; text-align: left">Price of each item</th>
+        <th style="padding: 12px; text-align: left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr style="border-bottom: 1px solid #ddd">
+        <td style="padding: 12px">{{ product.get_title_display }}</td>
+        <td style="padding: 12px">{{ product.price }}</td>
+        <td style="padding: 12px">
+          <div class="icon-container" style="display: flex; gap: 10px">
+            <a
+              class="delete-link"
+              data-id="{{ product.pk }}"
+              style="cursor: pointer"
+            >
+              <img
+                src="{% static 'images/delete_icon.png' %}"
+                alt="Delete"
+                style="width: 20px; height: 20px"
+              />
+            </a>
+            <a
+              class="edit-link"
+              data-id="{{ product.pk }}"
+              style="cursor: pointer"
+            >
+              <img
+                src="{% static 'images/edit_icon.png' %}"
+                alt="Edit"
+                style="width: 20px; height: 20px"
+              />
+            </a>
+            <a href="{% url 'ShibeApp:add_product' %}" class="add-link">
+              <img
+                src="{% static 'images/add_icon.png' %}"
+                alt="add"
+                style="width: 20px; height: 20px"
+              />
+            </a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" style="padding: 20px; text-align: center">
+          No products available in inventory
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // ======================
+      // DELETE FUNCTIONALITY
+      // ======================
+      const deleteLinks = document.querySelectorAll(".delete-link");
+
+      deleteLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          const productId = this.getAttribute("data-id");
+          const productRow = this.closest("tr");
+
+          const userConfirmed = confirm(
+            "Are you sure you want to delete the product?"
+          );
+
+          if (userConfirmed && productRow) {
+            fetch(`/product/delete/${productId}/`, {
+              method: "DELETE",
+              headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  productRow.remove();
+                  alert("Product deleted successfully!");
+                } else {
+                  alert("Failed to delete product: " + data.message);
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("An error occurred while deleting the product.");
+              });
+          } else if (!userConfirmed) {
+            alert("Deletion canceled.");
+          } else {
+            console.error("Product row not found!");
+          }
+        });
+      });
+
+      const editLinks = document.querySelectorAll(".edit-link"); // Or ".edit-link" if you change HTML
+
+      editLinks.forEach((editBtn) => {
+        editBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          const productId = this.getAttribute("data-id");
+          const row = this.closest("tr");
+
+          if (!row) {
+            console.error("Parent row not found!");
+            return;
+          }
+
+          // Fix: Target the PRICE CELL (2nd <td> in the row)
+          const priceCell = row.querySelector("td:nth-child(2)");
+          if (!priceCell) {
+            console.error("Price cell not found!");
+            return;
+          }
+
+          const currentPrice = priceCell.textContent.trim();
+
+          // Create editable input
+          priceCell.innerHTML = `
+      <input type="number" value="${currentPrice}" class="price-input">
+      <button class="save-btn">Save</button>
+      <button class="cancel-btn">Cancel</button>
+    `;
+
+          // Save functionality
+          priceCell.querySelector(".save-btn").addEventListener("click", () => {
+            const newPrice = priceCell.querySelector(".price-input").value;
+            fetch(`/product/update/${productId}/`, {
+              method: "POST",
+              headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: `price=${newPrice}`,
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  priceCell.textContent = newPrice;
+                  alert("Price updated!");
+                } else {
+                  alert("Error: " + data.message);
+                  priceCell.textContent = currentPrice; // Revert on error
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                priceCell.textContent = currentPrice; // Revert on failure
+              });
+          });
+
+          // Cancel functionality
+          priceCell
+            .querySelector(".cancel-btn")
+            .addEventListener("click", () => {
+              priceCell.textContent = currentPrice;
+            });
+        });
+      });
+    });
+  </script>
+</body>
+{% endblock content %}

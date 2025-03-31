@@ -1,0 +1,296 @@
+{% load static %} {% block content %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shibe product</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+  <style>
+    /* Your existing styles remain the same */
+
+    /* Add these new styles for search */
+    .search-container {
+      margin: 20px auto;
+      max-width: 500px;
+      padding: 0 15px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-family: "Montserrat", Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      display: none;
+    }
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      font-family: "Montserrat", Arial, sans-serif;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-family: "Montserrat", Arial, sans-serif; /* Apply Montserrat font to the button */
+      background: rgba(192, 197, 192, 0.719);
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 130px;
+      height: 40px;
+      font-weight: 500;
+      transform: 0.3s ease;
+      font-size: 15px;
+      margin: 5px;
+      box-sizing: border-box; /* Ensure padding and border are included in width */
+    }
+
+    button:hover {
+      background: rgba(216, 221, 221, 0.719);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      word-wrap: break-word; /* Handle long text */
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .icon {
+      cursor: pointer;
+      margin-right: 5px; /* Add some space between icons */
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-container img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .bt {
+      width: 100%;
+      max-width: 130px;
+      font-weight: 500;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transform: 0.3s ease;
+      font-size: 15px;
+      margin: 0 auto 50px; /* Center button */
+      display: block;
+    }
+
+    .ttle {
+      text-align: center;
+      margin-top: 0%;
+    }
+    .product-price {
+      color: #ecb607;
+      font-weight: 500;
+    }
+
+    .product-user {
+      color: #28a745;
+      font-weight: 500;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .bt {
+        width: 100%;
+        max-width: none;
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+
+      .icon-container {
+        justify-content: space-between;
+      }
+
+      table,
+      th,
+      td {
+        font-size: 14px;
+        padding: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .bt {
+        font-size: 12px;
+      }
+
+      button {
+        font-size: 12px;
+      }
+
+      th,
+      td {
+        font-size: 12px;
+        padding: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-logo">
+    <a href="{% url 'ShibeApp:home'%}">
+      <img
+        src="{% static 'images/shibe.png' %}"
+        alt="Shibe Product"
+        style="
+          width: 70px;
+          height: 70px;
+          margin-top: 40px;
+          margin-left: 30px;
+          cursor: pointer;
+        "
+    /></a>
+  </div>
+
+  <div class="ttle" style="margin-top: 20px; margin-left: -5px">
+    <h2>debtor <span>list</span></h2>
+  </div>
+
+  <div class="bt">
+    <a href="{% url 'ShibeApp:add_debtor' %}"><button>Add</button></a>
+  </div>
+
+  <!-- Search Form -->
+  <form method="GET" action="{% url 'ShibeApp:list_debtors' %}" class="mb-4">
+    <input
+      type="text"
+      name="search"
+      class="form-control"
+      placeholder="Search by name or phone..."
+      value="{{ search_query }}"
+      style="
+        padding: 8px;
+        width: 300px;
+        font-family: 'Montserrat', Arial, sans-serif;
+        border-radius: 30px;
+      "
+    />
+    <button
+      type="submit"
+      style="
+        background: none;
+        border: none;
+        margin-left: -40px; /* This pulls the icon inside the input */
+        cursor: pointer;
+        z-index: 2;
+      "
+      aria-label="Search"
+    >
+      <img
+        src="{% static 'images/search_icon.png' %}"
+        alt="Search"
+        style="width: 20px; height: 20px"
+      />
+    </button>
+  </form>
+
+  <!-- Clear Search Button -->
+  {% if search_query %}
+  <div class="mb-3">
+    Showing results for: "{{ search_query }}"
+    <a
+      href="{% url 'ShibeApp:list_debtors' %}"
+      class="btn btn-sm btn-outline-secondary ml-2"
+      style="text-decoration: none; margin-bottom: 80px"
+    >
+      Clear Search
+    </a>
+  </div>
+  {% endif %}
+
+  <table id="debtorsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Total debt</th>
+        <th>debt Paid</th>
+        <th>debt Pending</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for debtor in debtors %}
+      <tr class="debtor-row">
+        <td>{{ debtor.debtor_name }}</td>
+        <td>{{ debtor.debtor_phone }}</td>
+        <td>{{ debtor.total_orders }}</td>
+        <td>{{ debtor.total_paid }}</td>
+        <td>{{ debtor.total_pending }}</td>
+        <td>
+          <div class="icon-container">
+            <a
+              href="{% url 'ShibeApp:debtor_history' debtor.id %}"
+              class="view-link"
+            >
+              <img
+                src="{% static 'images/view_icon.png' %}"
+                alt="view"
+                class="icon"
+              />
+            </a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" style="text-align: center">No debtors found</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+{% endblock %}

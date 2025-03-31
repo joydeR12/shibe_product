@@ -1,0 +1,297 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<style>
+  body {
+    font-family: "Montserrat", Arial, sans-serif;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  /* Logo styling */
+  .nav-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    width: 70px;
+    height: 70px;
+    margin-top: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .logo-img {
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  /* Form container */
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .form-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  h4 {
+    color: #555;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-weight: lighter;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #444;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border 0.3s;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    border-color: #4a90e2;
+    outline: none;
+  }
+
+  .product-list {
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .add-product-btn {
+    background-color: #f0f0f0;
+    color: #333;
+    width: 100%;
+  }
+
+  .submit-btn {
+    background-color: green;
+    color: white;
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    font-weight: 500;
+  }
+
+  /* Remove or modify this hover effect */
+  .submit-btn:hover {
+    background-color: green; /* Same as normal state */
+    /* Optional: add slight darkening if you want some hover feedback */
+    /* filter: brightness(0.95); */
+  }
+
+  /* Style for product rows */
+  .product-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+
+  .product-row select {
+    flex: 2;
+  }
+
+  .product-row input {
+    flex: 1;
+  }
+
+  .product-row button {
+    flex: 0 0 auto;
+    background-color: #ff6b6b;
+    color: white;
+  }
+
+  .remove-btn {
+    background-color: red;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+</style>
+
+<body>
+  <div class="nav-logo">
+    <a href="{% url 'ShibeApp:home'%}">
+      <img
+        src="{% static 'images/shibe.png' %}"
+        alt="Shibe Product"
+        class="logo-img"
+      />
+    </a>
+  </div>
+
+  <!-- Centered form container -->
+  <div class="form-container">
+    <h2>Add Debtor</h2>
+    <div class="form-card">
+      <form id="debtorForm" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Debtor Name:</label>
+          <input type="text" name="debtor_name" required />
+        </div>
+
+        <div class="form-group">
+          <label>Debtor Phone:</label>
+          <input type="text" name="debtor_phone" required />
+        </div>
+
+        <div class="products-section">
+          <h4>Select Products</h4>
+          <div id="product-list" class="product-list"></div>
+
+          <button
+            type="button"
+            class="btn add-product-btn"
+            onclick="addProduct()"
+          >
+            Add Product
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label>Debt Paid:</label>
+          <input type="number" name="debt_paid" required />
+        </div>
+
+        <button type="submit" class="btn submit-btn">Submit Order</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let products = JSON.parse("{{ product|escapejs }}");
+    console.log(products);
+
+    let productList = document.getElementById("product-list");
+    let selectedProducts = [];
+
+    function addProduct() {
+      let productDiv = document.createElement("div");
+      let select = document.createElement("select");
+      let quantity = document.createElement("input");
+      let removeBtn = document.createElement("button");
+
+      select.name = "product";
+      quantity.type = "number";
+      quantity.name = "quantity";
+      quantity.min = "1";
+      quantity.placeholder = "Quantity";
+      removeBtn.innerText = "Remove";
+      removeBtn.classList.add("remove-btn");
+      removeBtn.onclick = function () {
+        productList.removeChild(productDiv);
+      };
+
+      products.forEach((product) => {
+        let option = document.createElement("option");
+        option.value = JSON.stringify({ id: product.id, price: product.price });
+        option.text = product.title;
+        select.appendChild(option);
+      });
+
+      productDiv.appendChild(select);
+      productDiv.appendChild(quantity);
+      productDiv.appendChild(removeBtn);
+      productList.appendChild(productDiv);
+    }
+
+    document
+      .getElementById("debtorForm")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+        let items = [];
+        document.querySelectorAll("#product-list div").forEach((div) => {
+          let productData = JSON.parse(div.querySelector("select").value);
+          let quantity = div.querySelector("input").value;
+          items.push({
+            id: productData.id,
+            product_price: productData.price,
+            quantity: quantity,
+          });
+        });
+
+        let formData = new FormData(this);
+        formData.append("items", JSON.stringify(items));
+
+        fetch("{% url 'ShibeApp:save_debtor_order' %}", {
+          method: "POST",
+          body: formData,
+        }).then((response) => {
+          if (response.ok) {
+            alert("Order saved successfully");
+            window.location.href = "/";
+          }
+        });
+        function addProduct() {
+          const productList = document.getElementById("product-list");
+          const productRow = document.createElement("div");
+          productRow.className = "product-row";
+
+          productRow.innerHTML = `
+        <select name="product" required>
+          <option value="">Select product</option>
+          <option value="kande_25kg">kande 25kg</option>
+          <!-- Add more products as needed -->
+        </select>
+        <input type="number" name="quantity" placeholder="Quantity" required>
+        <button type="button" class="btn" onclick="this.parentNode.remove()">Remove</button>
+      `;
+
+          productList.appendChild(productRow);
+        }
+      });
+  </script>
+</body>
+{% endblock %}

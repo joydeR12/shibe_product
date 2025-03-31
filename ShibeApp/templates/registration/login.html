@@ -1,35 +1,50 @@
-{% extends 'base.html'%}
-{% load static %}
-{% block content %}
+{% extends 'base.html'%} {% load static %} {% block content %}
+
 <div class="wrapper">
-<nav class="nav">
-<div class="nav-logo">
-  <p><span style="color: green;"> <span style="color: orange;">Shibe</span></span> Products</p> 
-</div>
-
-<div class="nav-button">
-  <a href="{% url 'ShibeApp:login' %}"><button class="btn" id="loginBtn">sign in</button></a>
-  <a href="{% url 'ShibeApp:authView' %}"><button class="btn" id="registerBtn">sign up</button></a>
-    
-</div>
-</nav>
-
-  
-  <div class="wrapper">
-   <div class="form-wrap">
-      <h3 style="text-align: center; margin-bottom: 20px; font-weight: 400; font-size: 15px;"><span style="color: green;">login</span> <span style="color: orange;">here</span></h3>
-     <form method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button type="submit">login</button>
- </form>
- <div class="container">
-   <p style="font-size: 15px;">don't have an account?</p> <a class="signup-link" href="{% url 'ShibeApp:authView' %}">Signup</a> </div>
+  <nav class="nav">
+    <div class="nav-logo">
+      <a href="{% url 'ShibeApp:home'%}">
+        <img
+          src="{% static 'images/shibe.png' %}"
+          alt="Shibe Product"
+          style="
+            width: 70px;
+            height: 70px;
+            margin-top: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+          "
+      /></a>
     </div>
-  </div> 
-  {% endblock content %} 
 
-  
+    <div class="nav-button">
+      <a href="{% url 'ShibeApp:login' %}"
+        ><button class="btn" id="loginBtn">sign in</button></a
+      >
+      <a href="{% url 'ShibeApp:authView' %}"
+        ><button class="btn" id="registerBtn">sign up</button></a
+      >
+    </div>
+  </nav>
 
-
- 
+  <div class="wrapper">
+    <div class="form-wrap">
+      <h3
+        style="
+          text-align: center;
+          margin-bottom: 20px;
+          font-weight: 400;
+          font-size: 15px;
+        "
+      >
+        <span style="color: green">login</span>
+        <span style="color: orange">here</span>
+      </h3>
+      <form method="POST">
+        {% csrf_token %} {{form}}
+        <button type="submit">login</button>
+      </form>
+    </div>
+  </div>
+  {% endblock content %}
+</div>
