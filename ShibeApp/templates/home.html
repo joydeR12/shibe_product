@@ -56,7 +56,12 @@
 
         <!-- Dropdown menu -->
         <div class="dropdown-menu">
-          <a href="{% url 'ShibeApp:logout' %}">Logout</a>
+          <form action="{% url 'ShibeApp:logout' %}" method="POST">
+            {% csrf_token %}
+            <a>
+              <button type="submit">logout</button>
+            </a>
+          </form>
         </div>
       </div>
     </header>
