@@ -138,43 +138,207 @@
       font-weight: 500;
     }
 
-    /* Media Queries */
+    /* Add these media queries to your existing <style> section */
+
+    /* Medium devices (tablets, 768px and below) */
     @media (max-width: 768px) {
-      .bt {
+      .nav-logo img {
+        width: 50px;
+        height: 50px;
+        margin-top: 20px;
+        margin-left: 15px;
+      }
+
+      .ttle h2 {
+        font-size: 1.5rem;
+        margin-left: 0;
+      }
+
+      /* Search form adjustments */
+      form.mb-4 {
+        display: flex;
+        width: 90%;
+        margin: 0 auto 20px;
+      }
+
+      form.mb-4 input[type="text"] {
         width: 100%;
-        max-width: none;
+        padding: 10px 15px;
+        padding-right: 40px;
+      }
+
+      form.mb-4 button {
+        margin-left: -35px;
+      }
+
+      /* Table adjustments */
+      #debtorsTable {
+        display: block;
+        width: 100vw;
+        margin-left: -5%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+      }
+
+      #debtorsTable th,
+      #debtorsTable td {
+        min-width: 120px;
+        padding: 10px 8px;
         font-size: 14px;
       }
 
-      button {
-        font-size: 14px;
-      }
-
+      /* Action buttons */
       .icon-container {
-        justify-content: space-between;
+        justify-content: center;
+        gap: 10px;
       }
 
-      table,
-      th,
-      td {
-        font-size: 14px;
-        padding: 6px;
+      .bt {
+        margin-bottom: 30px;
       }
     }
 
-    @media (max-width: 480px) {
-      .bt {
+    /* Small devices (phones, 576px and below) */
+    @media (max-width: 576px) {
+      .nav-logo img {
+        width: 40px;
+        height: 40px;
+        margin-top: 15px;
+        margin-left: 10px;
+      }
+
+      .ttle h2 {
+        font-size: 1.3rem;
+      }
+
+      /* Search form */
+      form.mb-4 {
+        width: 95%;
+      }
+
+      form.mb-4 input[type="text"] {
+        font-size: 14px;
+      }
+
+      /* Table adjustments */
+      #debtorsTable th,
+      #debtorsTable td {
+        min-width: 100px;
+        padding: 8px 5px;
         font-size: 12px;
       }
 
-      button {
-        font-size: 12px;
+      /* Clear search button */
+      .mb-3 {
+        font-size: 14px;
+        margin-bottom: 60px;
       }
 
-      th,
-      td {
-        font-size: 12px;
-        padding: 4px;
+      .bt button {
+        height: 35px;
+        font-size: 14px;
+      }
+    }
+
+    /* Extra small devices (phones, 400px and below) */
+    @media (max-width: 400px) {
+      .ttle h2 {
+        font-size: 1.2rem;
+      }
+
+      #debtorsTable th,
+      #debtorsTable td {
+        min-width: 90px;
+        padding: 6px 3px;
+        font-size: 11px;
+      }
+
+      .icon-container img {
+        width: 18px;
+        height: 18px;
+      }
+
+      .bt button {
+        height: 32px;
+        font-size: 13px;
+      }
+    }
+
+    /* Landscape orientation adjustments */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .nav-logo img {
+        margin-top: 10px;
+      }
+
+      .ttle {
+        margin-top: 5px;
+      }
+
+      #debtorsTable {
+        font-size: 13px;
+      }
+    }
+
+    /* Alternative: Stacked table layout for very small screens */
+    @media (max-width: 400px) {
+      #debtorsTable {
+        display: block;
+        width: 100%;
+        overflow-x: visible;
+        white-space: normal;
+      }
+
+      #debtorsTable thead {
+        display: none;
+      }
+
+      #debtorsTable tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      #debtorsTable td {
+        display: block;
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border: none;
+        border-bottom: 1px solid #eee;
+      }
+
+      #debtorsTable td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-align: left;
+      }
+
+      #debtorsTable td:last-child {
+        border-bottom: none;
+      }
+
+      /* Add data labels */
+      #debtorsTable td:nth-child(1):before {
+        content: "Name";
+      }
+      #debtorsTable td:nth-child(2):before {
+        content: "Phone";
+      }
+      #debtorsTable td:nth-child(3):before {
+        content: "Total Debt";
+      }
+      #debtorsTable td:nth-child(4):before {
+        content: "Debt Paid";
+      }
+      #debtorsTable td:nth-child(5):before {
+        content: "Debt Pending";
+      }
+      #debtorsTable td:nth-child(6):before {
+        content: "Actions";
       }
     }
   </style>

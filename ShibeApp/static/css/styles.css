@@ -84,10 +84,6 @@
   margin-left: 15px;
 }
 
-.btn:hover {
-  background: rgba(216, 221, 221, 0.719);
-}
-
 body {
   display: flex;
   justify-content: center;
@@ -177,9 +173,6 @@ body {
 
   display: block;
   text-decoration: none;
-}
-.signup-link:hover {
-  text-decoration: underline;
 }
 
 /* Container to hold both elements */
@@ -469,6 +462,7 @@ body {
 
   #sidebar {
     display: none; /* Hides the sidebar for medium screens */
+    opacity: 0.95;
   }
 
   .menu-icon {

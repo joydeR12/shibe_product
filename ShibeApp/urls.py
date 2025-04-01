@@ -29,5 +29,7 @@ urlpatterns = [
     path('debtors/<int:debtor_id>/history/', views.debtor_history, name='debtor_history'),
     path('update-payment/<int:order_id>/', views.update_payment, name='update_payment'),
     path('debtors/update/<int:order_id>/', views.update_debt, name='update_debt'),
+    path('api/borrowed-products-chart/', views.borrowed_products_chart_data, name='borrowed-products-chart'),
+
 ]
 

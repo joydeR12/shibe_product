@@ -59,8 +59,8 @@
   /* Logo positioning */
   .nav-logo {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 40px;
+    left: 30px;
     z-index: 1000;
   }
 
@@ -92,6 +92,164 @@
   /* Table styling */
   table {
     margin-top: 20px;
+  }
+  @media (max-width: 768px) {
+    /* Adjust logo and title for smaller screens */
+    .nav-logo {
+      position: static;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .nav-logo img {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    h2 {
+      margin-left: 0;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    /* Make table responsive */
+    table {
+      display: block;
+      overflow-x: auto;
+    }
+
+    /* Adjust button sizes */
+    .save-btn,
+    .cancel-btn,
+    button[style*="width: 15%"] {
+      width: 30% !important;
+      margin-top: 20px;
+    }
+
+    /* Reduce padding in table cells */
+    th,
+    td {
+      padding: 6px 4px;
+      font-size: 14px;
+    }
+
+    /* Adjust icon sizes */
+    .icon-container img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    /* Stack table rows for very small screens */
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
+
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+
+    td {
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+    }
+
+    td:before {
+      position: absolute;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      font-weight: bold;
+    }
+
+    td:nth-of-type(1):before {
+      content: "Date";
+    }
+    td:nth-of-type(2):before {
+      content: "Debt paid";
+    }
+    td:nth-of-type(3):before {
+      content: "Debt pending";
+    }
+    td:nth-of-type(4):before {
+      content: "Total debt";
+    }
+    td:nth-of-type(5):before {
+      content: "Action";
+    }
+
+    /* Adjust buttons for mobile */
+    .save-btn,
+    .cancel-btn,
+    button[style*="width: 15%"] {
+      width: 45% !important;
+      height: 36px;
+      font-size: 14px;
+    }
+
+    /* Adjust back button position */
+    button[style*="margin-top: 150px"] {
+      margin-top: 30px !important;
+    }
+  }
+  @media (max-width: 768px) {
+    /* Logo and title adjustments */
+    .nav-logo {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-top: 10px;
+    }
+
+    .nav-logo img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      text-align: center;
+      width: 100%;
+    }
+
+    /* Rest of your existing 768px media query rules... */
+  }
+
+  @media (max-width: 480px) {
+    /* Further adjustments for very small screens */
+    .nav-logo img {
+      width: 50px;
+      height: 50px;
+    }
+
+    h2 {
+      font-size: 16px;
+      padding: 0 10px;
+    }
+
+    /* Rest of your existing 480px media query rules... */
   }
 </style>
 <div class="nav-logo">
@@ -145,23 +303,7 @@
   </tr>
   {% endfor %}
 </table>
-<button
-  style="
-    margin-top: 150px;
-    margin-right: 15px;
-    width: 15%;
-    height: 40px;
-    border-radius: 30px;
-    border: none;
-    font-family: 'Montserrat', Arial, sans-serif;
-  "
->
-  <a
-    href="{% url 'ShibeApp:list_debtors' %}"
-    style="text-decoration: none; color: black"
-    >Back to List</a
-  >
-</button>
+
 <script>
   const editLinks = document.querySelectorAll(".edit-link"); // Or ".edit-link" if you change HTML
 

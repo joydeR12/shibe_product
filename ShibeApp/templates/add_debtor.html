@@ -15,8 +15,7 @@
     top: 20px;
     left: 20px;
     z-index: 100;
-    width: 70px;
-    height: 70px;
+
     margin-top: 20px;
     margin-left: 10px;
     cursor: pointer;
@@ -38,6 +37,7 @@
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
+    width: 100%;
   }
 
   .form-card {
@@ -175,7 +175,11 @@
   <div class="form-container">
     <h2>Add Debtor</h2>
     <div class="form-card">
-      <form id="debtorForm" method="POST">
+      <form
+        id="debtorForm"
+        action="{% url 'ShibeApp:save_debtor_order' %}"
+        method="POST"
+      >
         {% csrf_token %}
         <div class="form-group">
           <label>Debtor Name:</label>
@@ -271,7 +275,7 @@
         }).then((response) => {
           if (response.ok) {
             alert("Order saved successfully");
-            window.location.href = "/";
+            window.location.href = "{% url 'ShibeApp:list_debtors' %}";
           }
         });
         function addProduct() {

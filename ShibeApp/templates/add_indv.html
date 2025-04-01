@@ -20,9 +20,11 @@
   }
 
   .nav-logo img {
-    height: 80px;
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+    transition: transform 0.2s;
   }
-
   .container {
     max-width: 600px;
     margin-left: 350px;
@@ -59,22 +61,37 @@
   }
 
   label {
-    font-weight: bold;
+    font-weight: lighter;
     color: #444;
   }
 
-  input {
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
     padding: 10px 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
+    transition: border 0.3s;
   }
 
-  input:focus {
-    outline: none;
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
     border-color: #4a90e2;
+    outline: none;
   }
-
+  .remove-btn {
+    background-color: red;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
   .btn {
     padding: 10px 20px;
     border: none;
@@ -88,23 +105,17 @@
     background-color: #f0f0f0;
     color: #333;
     align-self: flex-start;
-  }
-
-  .add-product-btn:hover {
-    background-color: white;
+    width: 100%;
   }
 
   .submit-btn {
-    background-color: #4a90e2;
+    background-color: green;
     color: white;
     width: 100%;
+    margin-top: 15px;
     padding: 12px;
+    font-weight: 500;
   }
-
-  .submit-btn:hover {
-    background-color: #3a7bc8;
-  }
-
   .form-actions {
     margin-top: 20px;
   }
@@ -130,12 +141,27 @@
   }
 
   #product-list {
-    border: 1px solid #f0f0f0;
-    padding: 15px;
-    border-radius: 5px;
-    min-height: 50px;
     margin-bottom: 15px;
-    background: white;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .form-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 600px;
   }
 </style>
 <body>
@@ -144,42 +170,34 @@
       <img src="{% static 'images/shibe.png' %}" alt="Shibe Product" />
     </a>
   </div>
-  <h2>Add Debtor</h2>
-  <div class="container">
-    <form id="debtorForm" method="POST" class="debtor-form">
-      {% csrf_token %}
 
-      <div class="form-group">
-        <label>Debtor Name:</label>
-        <input type="text" name="debtor_name" required />
-      </div>
+  <div class="form-container">
+    <h2>Add another product</h2>
+    <div class="form-card">
+      <form id="debtorForm" method="POST">
+        {% csrf_token %}
 
-      <div class="form-group">
-        <label>Debtor Phone:</label>
-        <input type="text" name="debtor_phone" required />
-      </div>
+        <div class="products-section">
+          <h4 style="font-weight: lighter">Select Products</h4>
+          <div id="product-list" class="product-list"></div>
 
-      <div class="form-group">
-        <h3>Select Products</h3>
-        <div id="product-list"></div>
-        <button
-          type="button"
-          class="btn add-product-btn"
-          onclick="addProduct()"
-        >
-          Add Product
-        </button>
-      </div>
+          <button
+            type="button"
+            class="btn add-product-btn"
+            onclick="addProduct()"
+          >
+            Add Product
+          </button>
+        </div>
 
-      <div class="form-group">
-        <label>Debt Paid:</label>
-        <input type="number" name="debt_paid" required />
-      </div>
+        <div class="form-group">
+          <label>Debt Paid:</label>
+          <input type="number" name="debt_paid" required />
+        </div>
 
-      <div class="form-actions">
         <button type="submit" class="btn submit-btn">Submit Order</button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 
   <script>
@@ -243,6 +261,7 @@
         }).then((response) => {
           if (response.ok) {
             alert("Order saved successfully");
+            window.location.href = "{% url 'ShibeApp:list_debtors' %}";
           }
         });
       });

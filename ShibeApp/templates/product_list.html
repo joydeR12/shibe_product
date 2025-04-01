@@ -122,44 +122,127 @@
       border-radius: 4px;
       font-family: "Montserrat", Arial, sans-serif;
     }
+    /* Add this to your existing <style> section */
 
-    /* Media Queries */
+    /* Medium devices (tablets, 768px and down) */
     @media (max-width: 768px) {
-      .bt {
-        width: 100%;
-        max-width: none;
+      .nav-logo img {
+        width: 50px;
+        height: 50px;
+        margin-top: 20px;
+        margin-left: 15px;
+      }
+
+      .ttle h2 {
+        font-size: 1.5rem;
+        margin-top: 10px;
+      }
+
+      .search-container form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .search-container input[type="text"] {
+        width: 80%;
+        margin-bottom: 10px;
+      }
+
+      .search-container button {
+        margin-left: 0;
+        margin-top: -15px;
+      }
+
+      table {
         font-size: 14px;
       }
 
-      button {
-        font-size: 14px;
+      th,
+      td {
+        padding: 8px 5px;
       }
 
       .icon-container {
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 5px;
       }
 
-      table,
-      th,
-      td {
+      .icon-container img {
+        width: 16px;
+        height: 16px;
+      }
+
+      .bt button {
+        max-width: 100%;
         font-size: 14px;
-        padding: 6px;
       }
     }
 
-    @media (max-width: 480px) {
-      .bt {
-        font-size: 12px;
+    /* Mobile-first adjustments */
+    @media (max-width: 768px) {
+      /* Search bar */
+      .search-container form {
+        display: flex;
+        width: 90%;
+        margin: 0 auto 20px;
       }
 
-      button {
-        font-size: 12px;
+      .search-container input[type="text"] {
+        width: 100%;
+        padding: 10px 15px;
+        padding-right: 40px;
+        border-radius: 30px;
+        border: 1px solid #ddd;
+      }
+
+      .search-container button {
+        margin-left: -35px;
+        background: none;
+        border: none;
+      }
+
+      /* Table */
+      table {
+        width: 100vw;
+        margin-left: -5%;
+        font-size: 14px;
+        display: block;
+        overflow-x: auto;
       }
 
       th,
       td {
-        font-size: 12px;
-        padding: 4px;
+        padding: 12px 8px;
+        min-width: 100px;
+      }
+
+      /* Action buttons */
+      .icon-container {
+        display: flex;
+        gap: 12px;
+      }
+
+      .icon-container img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    /* Smaller phones */
+    @media (max-width: 480px) {
+      .search-container input[type="text"] {
+        width: 85%;
+      }
+
+      th,
+      td {
+        padding: 8px 5px;
+        font-size: 13px;
+      }
+
+      .icon-container {
+        gap: 8px;
       }
     }
   </style>

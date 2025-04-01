@@ -16,6 +16,7 @@ from django.views.decorators.http import require_POST
 from django.db.models import Sum
 from decimal import Decimal
 from django.db.models import Q
+from django.db.models import Count
 
 def authView(request):
     if request.method == "POST":
@@ -152,21 +153,6 @@ def save_debtor_order(request):
 
 @login_required
 
-
-# def list_debtors(request):
-#     debtors = DebitorOrder.objects.all()
-#     return render(request, 'list_debtors.html', {'debtors': debtors})
-
-
-# def list_debtors(request):
-#     # Get all unique debtors with their aggregated sums
-#     debtors = Debtor.objects.annotate(
-#         total_orders=Sum('debitororder__total_price', default=0),
-#         total_paid=Sum('debitororder__debt_paid', default=0),
-#         total_pending=Sum('debitororder__debt_pending', default=0)
-#     ).order_by('-date_created')
-    
-#     return render(request, 'list_debtors.html', {'debtors': debtors})
 
 def list_debtors(request):
     # Get search query from request
@@ -388,3 +374,21 @@ def update_debt(request, order_id):
     
     return redirect('ShibeApp:list_debtors')  # Fallback redirect
 
+def borrowed_products_chart_data(request):
+    # Group by product title and SUM the quantities (not count)
+    data = DebitorProduct.objects.values('product__title').annotate(
+        total_quantity=Sum('quantity')  # Sum all quantities for each product
+    ).order_by('-total_quantity')  # Order by highest quantity first
+
+    # Prepare data for chart
+    categories = []
+    series_data = []
+
+    for item in data:
+        categories.append(item['product__title'])
+        series_data.append(item['total_quantity'])  # Use the summed quantity
+
+    return JsonResponse({
+        'categories': categories,
+        'series_data': series_data,  # Now contains quantities like [5, 3, 10, ...]
+    })
